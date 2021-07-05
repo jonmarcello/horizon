@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { pokedraw, pokeguess, stop } from './commands'
+import { decide, help, pokedraw, pokeguess, stop } from './commands'
 import { store } from './store'
 import { sendEmbed, splitMessage } from './utils'
 
@@ -15,6 +15,14 @@ export function handleCommand(message: Message): void {
   const [command, args] = splitMessage(message.content)
 
   switch (command) {
+    case 'decide':
+      decide(message, args)
+      break
+
+    case 'help':
+      help(message)
+      break
+
     case 'pokedraw':
       if (store.getIsGameActive()) {
         sendActiveGameEmbed(message)

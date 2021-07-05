@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import { store } from './store'
 import { handleCommand } from './handleCommand'
 import { GameType } from './types'
+import { randomChance } from '@eb3n/outils'
 
 // load env vars
 dotenv.config()
@@ -14,15 +15,19 @@ client.on('message', (message) => {
   // make bot ignore own messages
   if (message.author === client.user) return
 
-  // don't send unless in #poke-draw
-  // if (message.channel.id !== '859794185360375820') {
-  //   return
-  // }
+  // don't send unless in #poke-draw/testing
+  if (
+    ![process.env.CHANNEL_POKEDRAW, process.env.CHANNEL_TESTING].includes(
+      message.channel.id
+    )
+  ) {
+    return
+  }
 
   if (message.content.startsWith(process.env.DISCORD_PREFIX!)) {
     handleCommand(message)
-  } else if (store.getGameType() === GameType.POKEGUESS) {
-    // handle the guess
+  } else if (randomChance(10)) {
+    message.react('👍')
   }
 })
 

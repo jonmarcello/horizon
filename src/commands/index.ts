@@ -1,3 +1,5 @@
+export * from './decide'
+export * from './help'
 export * from './pokedraw'
 export * from './pokeguess'
 export * from './stop'
