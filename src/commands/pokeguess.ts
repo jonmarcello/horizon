@@ -37,11 +37,15 @@ function getPokemonEmbed(
   }
 }
 
-function getPokemonHint(name: string): string {
-  return name
-    .split('')
-    .map((letter, idx) => (idx === 0 || idx === name.length - 1 ? letter : '#'))
-    .join('')
+function getHints(name: string): [string, string] {
+  const first = name.charAt(0)
+  const last = name.charAt(name.length - 1)
+  const rest = name.slice(1, name.length - 1)
+
+  const noVowels = first + rest.replace(/[aeiou]/g, '#') + last
+  const noMiddle = first + '#'.repeat(rest.length) + last
+
+  return [noVowels, noMiddle]
 }
 
 function getFinalScoresString(scores: Obj<number>): string {
@@ -85,19 +89,25 @@ async function playRound(
 ): Promise<Obj<number>> {
   const { min, max } = DEX_NUMBERS[gen]
   const pokemon = getRandomPokemon(min, max)
-  const hint = getPokemonHint(pokemon.name)
+  const [noVowels, noMiddle] = getHints(pokemon.name)
   const pokemonEmbed = getPokemonEmbed(pokemon, currentRound, totalRounds)
   let answers: Collection<string, Message>
 
   send(message, { embed: pokemonEmbed })
-  const hintTimeout = setTimeout(() => {
-    sendEmbed(message, `Hint: ${hint}`)
-  }, 15000)
+
+  let hintTimeout: NodeJS.Timeout
+
+  hintTimeout = setTimeout(() => {
+    sendEmbed(message, `Hint: ${noMiddle}`)
+    hintTimeout = setTimeout(() => {
+      sendEmbed(message, `Hint: ${noVowels}`)
+    }, 10000)
+  }, 20000)
 
   try {
     answers = await message.channel.awaitMessages(
       (message) => filter(message, pokemon),
-      { max: 1, time: 30000, errors: ['time'] }
+      { max: 1, time: 40000, errors: ['time'] }
     )
     clearTimeout(hintTimeout)
   } catch (_) {

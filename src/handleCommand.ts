@@ -1,4 +1,4 @@
-import { Message, Client, MessageAdditions } from 'discord.js'
+import { Message } from 'discord.js'
 import { pokedraw, pokeguess, stop } from './commands'
 import { store } from './store'
 import { sendEmbed, splitMessage } from './utils'
@@ -10,6 +10,7 @@ function sendActiveGameEmbed(message: Message): void {
     'error'
   )
 }
+
 export function handleCommand(message: Message): void {
   const [command, args] = splitMessage(message.content)
 
