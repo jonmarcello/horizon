@@ -37,10 +37,10 @@
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
-"@eb3n/outils@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@eb3n/outils/-/outils-0.0.5.tgz#4ace91e0e465a80ef7075b04ef3185b91041039c"
-  integrity sha512-aGAZ1K5HoxLdu44MjJyoazrTqP1wUvTyBqhjJ/lay484OBJpgffewP4JRdCDWQWrm/VZkITpBppJP5IgjrDXRw==
+"@eb3n/outils@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@eb3n/outils/-/outils-0.1.1.tgz#794a66fe071a32c1226c5deb529f0598606b7a25"
+  integrity sha512-lKBX7dX+XF7AOLyQ37H3Q70QTz6E0EVGeh3bBJ/vOkWpYfM7vWlSvQItOKpaWO6q4OzxiKnmOS2iieFP43DsIw==
 
 "@eslint/eslintrc@^0.4.2":
   version "0.4.2"
