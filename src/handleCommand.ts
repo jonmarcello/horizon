@@ -13,6 +13,13 @@ function sendActiveGameEmbed(message: Message): void {
 
 export function handleCommand(message: Message): void {
   const [command, args] = splitMessage(message.content)
+  const isAllowedChannel =
+    message.channel.id === process.env.CHANNEL_POKEDRAW ||
+    message.channel.id === process.env.CHANNEL_TESTING
+
+  if (!isAllowedChannel) {
+    return
+  }
 
   switch (command) {
     case 'decide':
