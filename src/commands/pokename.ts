@@ -8,7 +8,7 @@ import randomNames from '../assets/randomNames.json'
 function generateName(): string {
   const { prefixes, suffixes } = randomNames[randomNumber(randomNames.length)]
   const prefix = prefixes[randomNumber(prefixes.length)].toLowerCase()
-  const suffix = suffixes[randomNumber(suffixes.length)].toLowerCase()
+  const suffix = prefixes[randomNumber(suffixes.length)].toLowerCase()
 
   return capitaliseWord(`${prefix}${suffix}`)
 }
