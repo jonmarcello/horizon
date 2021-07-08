@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { decide, help, pokedraw, pokeguess, stop } from './commands'
+import { decide, help, pokedraw, pokeguess, pokename, stop } from './commands'
 import { store } from './store'
 import { sendEmbed, splitMessage } from './utils'
 
@@ -31,6 +31,7 @@ export function handleCommand(message: Message): void {
       break
 
     case 'pokedraw':
+    case 'pdraw':
       if (store.getIsGameActive()) {
         sendActiveGameEmbed(message)
       } else {
@@ -39,10 +40,20 @@ export function handleCommand(message: Message): void {
       break
 
     case 'pokeguess':
+    case 'pguess':
       if (store.getIsGameActive()) {
         sendActiveGameEmbed(message)
       } else {
         pokeguess(message, args)
+      }
+      break
+
+    case 'pokename':
+    case 'pname':
+      if (store.getIsGameActive()) {
+        sendActiveGameEmbed(message)
+      } else {
+        pokename(message, args)
       }
       break
 
