@@ -15,7 +15,7 @@ client.on('message', (message) => {
 
   if (message.content.startsWith(process.env.DISCORD_PREFIX!)) {
     handleCommand(message)
-  } else if (randomChance(10)) {
+  } else if (randomChance(500)) {
     message.react('👍')
   }
 })
