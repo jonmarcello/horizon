@@ -15,7 +15,7 @@ export enum GameType {
   NONE,
   POKEDRAW,
   POKEGUESS,
-  POKENAME
+  ACDRAW
 }
 
 export type HorizonState = {

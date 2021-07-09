@@ -1,10 +1,31 @@
 import { Message, MessageEmbedOptions } from 'discord.js'
-import { capitaliseWords } from '@eb3n/outils'
-import { GameType, Pokemon, Gen } from '../types'
+import { capitaliseWord, capitaliseWords, randomNumber } from '@eb3n/outils'
+import { GameType, Gen } from '../types'
 import { store } from '../store'
 import { getRandomPokemon, send, sendEmbed, DEX_NUMBERS } from '../utils'
+import { fakemon } from '../assets/pokemon.json'
 
-function getPokemonEmbed(pokemon: Pokemon): MessageEmbedOptions {
+function generateRandomName(): string {
+  const { prefixes, suffixes } = fakemon[randomNumber(fakemon.length)]
+  const prefix = prefixes[randomNumber(prefixes.length)].toLowerCase()
+  const suffix = prefixes[randomNumber(suffixes.length)].toLowerCase()
+
+  return capitaliseWord(`${prefix}${suffix}`)
+}
+
+function getFakePokemonEmbed(): MessageEmbedOptions {
+  const name = generateRandomName()
+  return {
+    color: '#6366F1',
+    title: 'Random Pokémon Name',
+    fields: [{ name: 'Name', value: name, inline: true }]
+  }
+}
+
+function getRealPokemonEmbed(gen: Gen): MessageEmbedOptions {
+  const { min, max } = DEX_NUMBERS[gen]
+  const pokemon = getRandomPokemon(min, max)
+
   return {
     color: '#6366F1',
     title: 'Random Pokémon',
@@ -22,13 +43,15 @@ function getPokemonEmbed(pokemon: Pokemon): MessageEmbedOptions {
   }
 }
 
-function parsePokedrawArgs(args: string): [Gen, number, boolean] {
+function parsePokedrawArgs(args: string): [Gen | 'fake', number, boolean] {
   if (!args?.length) {
     return ['all', 90, false]
   }
 
-  const gen = (args.match(/gen[12345678]|all/)?.[0] || 'all') as Gen
   const time = args.match(/(?<!gen)(\d+)s?/)?.[1] || 90
+  const gen = (args.match(/gen[12345678]|fake|all/)?.[0] || 'all') as
+    | Gen
+    | 'fake'
 
   return [gen, Number(time), time < 30 || time > 300]
 }
@@ -39,18 +62,18 @@ export function pokedraw(message: Message, args: string): void {
   if (didParsingFail) {
     sendEmbed(
       message,
-      'Usage: `%pokedraw [gen1/.../gen8/all] [30-300]s`',
+      'Invalid command. Type `%help` for command usage instructions.',
       'error'
     )
     return
   }
 
-  const { min, max } = DEX_NUMBERS[gen]
+  if (gen === 'fake') {
+    send(message, { embed: getFakePokemonEmbed() })
+  } else {
+    send(message, { embed: getRealPokemonEmbed(gen) })
+  }
 
-  const pokemon = getRandomPokemon(min, max)
-  const pokemonEmbed = getPokemonEmbed(pokemon)
-
-  send(message, { embed: pokemonEmbed })
   store.startGame(GameType.POKEDRAW)
 
   sendEmbed(message, `Your **${seconds}** seconds starts... now!`)

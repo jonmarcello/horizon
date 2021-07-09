@@ -6,7 +6,7 @@ import {
 } from 'discord.js'
 import { Pokemon } from './types'
 import { Obj, randomNumber } from '@eb3n/outils'
-import pokemonData from './assets/pokemon.json'
+import { pokemon } from './assets/pokemon.json'
 
 export const DEX_NUMBERS = {
   gen1: { min: 1, max: 151 },
@@ -64,8 +64,8 @@ export function reply(message: Message, content: string): void {
   message.reply(content || '_ _')
 }
 
-export function getRandomPokemon(min = 0, max = pokemonData.length): Pokemon {
-  return pokemonData[randomNumber(max, min)]
+export function getRandomPokemon(min = 0, max = pokemon.length): Pokemon {
+  return pokemon[randomNumber(max, min)]
 }
 
 export async function sleep(duration: number): Promise<unknown> {
