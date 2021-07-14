@@ -9,7 +9,11 @@ export function help(message: Message): void {
     fields: [
       {
         name: '`%acdraw [time]`',
-        value: '• [time]: a number between 30 and 300\n• shorthand: `%ac`'
+        value: '• [time]: a number between 30 and 600\n• shorthand: `%ac`'
+      },
+      {
+        name: '`%decide [query]`',
+        value: '• [query]: a yes/no question to ask'
       },
       {
         name: '`%pokedraw [time] [generation/fake]`',
