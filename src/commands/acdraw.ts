@@ -44,11 +44,11 @@ function getCharacterEmbed(): MessageEmbedOptions {
 }
 
 function parseArgs(args: string): [number, boolean] {
-  if (!args?.length) return [90, false]
+  if (!args?.length) return [300, false]
 
-  const time = args.match(/(?<!gen)(\d+)s?/)?.[1] || 90
+  const time = args.match(/(\d+)s?/)?.[1] || 300
 
-  return [Number(time), time < 30 || time > 300]
+  return [Number(time), time < 30 || time > 600]
 }
 
 export function acdraw(message: Message, args: string): void {
