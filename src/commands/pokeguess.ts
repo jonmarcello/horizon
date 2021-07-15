@@ -11,7 +11,7 @@ import { GameType, Gen, Pokemon } from '../types'
 import { store } from '../store'
 import { Obj, capitaliseWords } from '@eb3n/outils'
 
-function parsePokeguessArgs(args: string): [Gen, number, boolean] {
+function pargeArgs(args: string): [Gen, number, boolean] {
   if (!args?.length) {
     return ['all', 10, false]
   }
@@ -138,12 +138,12 @@ async function playRound(
 }
 
 export async function pokeguess(message: Message, args: string): Promise<void> {
-  const [gen, totalRounds, didParsingFail] = parsePokeguessArgs(args)
+  const [gen, totalRounds, didParsingFail] = pargeArgs(args)
 
   if (didParsingFail) {
     sendEmbed(
       message,
-      'Usage: `%pokeguess [gen1/.../gen8/all] [1-25]`',
+      'Invalid command. Type `%help` for command usage instructions.',
       'error'
     )
     return

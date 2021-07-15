@@ -21,6 +21,8 @@ export function handleCommand(message: Message): void {
     return
   }
 
+  console.log({ command, args })
+
   switch (command) {
     case 'acdraw':
     case 'ac':
@@ -32,6 +34,7 @@ export function handleCommand(message: Message): void {
       break
 
     case 'decide':
+    case 'd':
       decide(message, args)
       break
 

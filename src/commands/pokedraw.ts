@@ -8,7 +8,7 @@ import { fakemon } from '../assets/pokemon.json'
 function generateRandomName(): string {
   const { prefixes, suffixes } = fakemon[randomNumber(fakemon.length)]
   const prefix = prefixes[randomNumber(prefixes.length)].toLowerCase()
-  const suffix = prefixes[randomNumber(suffixes.length)].toLowerCase()
+  const suffix = suffixes[randomNumber(suffixes.length)].toLowerCase()
 
   return capitaliseWord(`${prefix}${suffix}`)
 }
@@ -43,21 +43,19 @@ function getRealPokemonEmbed(gen: Gen): MessageEmbedOptions {
   }
 }
 
-function parsePokedrawArgs(args: string): [Gen | 'fake', number, boolean] {
-  if (!args?.length) {
-    return ['all', 90, false]
-  }
+function pargeArgs(args: string): [Gen | 'fake', number, boolean] {
+  if (!args?.length) return ['all', 300, false]
 
-  const time = args.match(/(?<!gen)(\d+)s?/)?.[1] || 90
+  const time = args.match(/(?<!gen)(\d+)s?/)?.[1] || 300
   const gen = (args.match(/gen[12345678]|fake|all/)?.[0] || 'all') as
     | Gen
     | 'fake'
 
-  return [gen, Number(time), time < 30 || time > 300]
+  return [gen, Number(time), time < 30 || time > 600]
 }
 
 export function pokedraw(message: Message, args: string): void {
-  const [gen, seconds, didParsingFail] = parsePokedrawArgs(args)
+  const [gen, seconds, didParsingFail] = pargeArgs(args)
 
   if (didParsingFail) {
     sendEmbed(
