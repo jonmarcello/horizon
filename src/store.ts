@@ -5,7 +5,7 @@ import {
   HorizonState,
   HorizonStore
 } from './types'
-import { Fn } from '@eb3n/outils'
+import { Fn } from 'tsu'
 
 const state: HorizonState = {
   gameType: GameType.NONE,

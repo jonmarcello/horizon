@@ -1,5 +1,5 @@
 import { Message, MessageEmbedOptions } from 'discord.js'
-import { capitaliseWord, capitaliseWords, randomNumber } from '@eb3n/outils'
+import { capitalise, randomNumber } from 'tsu'
 import { GameType, Gen } from '../types'
 import { store } from '../store'
 import { getRandomPokemon, send, sendEmbed, DEX_NUMBERS } from '../utils'
@@ -10,7 +10,7 @@ function generateRandomName(): string {
   const prefix = prefixes[randomNumber(prefixes.length)].toLowerCase()
   const suffix = suffixes[randomNumber(suffixes.length)].toLowerCase()
 
-  return capitaliseWord(`${prefix}${suffix}`)
+  return capitalise(`${prefix}${suffix}`)
 }
 
 function getFakePokemonEmbed(): MessageEmbedOptions {
@@ -30,7 +30,7 @@ function getRealPokemonEmbed(gen: Gen): MessageEmbedOptions {
     color: '#6366F1',
     title: 'Random Pokémon',
     fields: [
-      { name: 'Name', value: capitaliseWords(pokemon.name), inline: true },
+      { name: 'Name', value: capitalise(pokemon.name, true), inline: true },
       {
         name: 'Pokédex Number',
         value: `#${pokemon.number}`,

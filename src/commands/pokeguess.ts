@@ -9,7 +9,7 @@ import {
 import { Collection, Message, MessageEmbedOptions } from 'discord.js'
 import { GameType, Gen, Pokemon } from '../types'
 import { store } from '../store'
-import { Obj, capitaliseWords } from '@eb3n/outils'
+import { Obj, capitalise } from 'tsu'
 
 function pargeArgs(args: string): [Gen, number, boolean] {
   if (!args?.length) {
@@ -129,8 +129,9 @@ async function playRound(
 
   sendEmbed(
     message,
-    `\`${roundWinner}\` got it! The answer was **${capitaliseWords(
-      pokemon.name
+    `\`${roundWinner}\` got it! The answer was **${capitalise(
+      pokemon.name,
+      true
     )}**!\nTheir score is now **${updatedScores[roundWinner]}**!`
   )
 

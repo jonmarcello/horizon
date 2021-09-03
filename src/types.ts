@@ -1,4 +1,4 @@
-import { Fn } from '@eb3n/outils'
+import { Fn } from 'tsu'
 
 export type Gen =
   | 'gen1'

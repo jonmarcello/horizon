@@ -1,9 +1,4 @@
-import {
-  capitaliseWord,
-  capitaliseWords,
-  randomChance,
-  randomNumber
-} from '@eb3n/outils'
+import { capitalise, randomChance, randomNumber } from 'tsu'
 import { Message, MessageEmbedOptions } from 'discord.js'
 import { GameType } from '../types'
 import { store } from '../store'
@@ -32,11 +27,11 @@ function getCharacterEmbed(): MessageEmbedOptions {
     color: '#6366F1',
     title: 'Random A.C. Character',
     fields: [
-      { name: 'Species', value: capitaliseWord(species), inline: true },
-      { name: 'Personality', value: capitaliseWord(personality), inline: true },
+      { name: 'Species', value: capitalise(species), inline: true },
+      { name: 'Personality', value: capitalise(personality), inline: true },
       {
         name: 'Colour/Accessory',
-        value: capitaliseWord(colourAccessory),
+        value: capitalise(colourAccessory),
         inline: true
       }
     ]

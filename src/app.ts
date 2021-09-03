@@ -1,7 +1,7 @@
 import Discord from 'discord.js'
 import dotenv from 'dotenv'
 import { handleCommand } from './handleCommand'
-import { randomChance } from '@eb3n/outils'
+import { randomChance } from 'tsu'
 
 // load env vars
 dotenv.config()

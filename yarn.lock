@@ -37,11 +37,6 @@
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
-"@eb3n/outils@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@eb3n/outils/-/outils-0.1.1.tgz#794a66fe071a32c1226c5deb529f0598606b7a25"
-  integrity sha512-lKBX7dX+XF7AOLyQ37H3Q70QTz6E0EVGeh3bBJ/vOkWpYfM7vWlSvQItOKpaWO6q4OzxiKnmOS2iieFP43DsIw==
-
 "@eslint/eslintrc@^0.4.2":
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.2.tgz#f63d0ef06f5c0c57d76c4ab5f63d3835c51b0179"
@@ -1679,6 +1674,11 @@ tslib@^1.8.1:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
+
+tsu@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/tsu/-/tsu-1.0.2.tgz#97f56c781dd179fbf4aba38e9e314e4f933a57ca"
+  integrity sha512-6cWto1OQf3WJlW2fc1A7YGl+pUgpX95MW4WNC+ALhpb8vUfmFiPgfQBaaWUyMlJ47X8DIsoY6gqCp6wUpl8m/w==
 
 tsutils@^3.21.0:
   version "3.21.0"

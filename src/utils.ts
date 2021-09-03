@@ -5,7 +5,8 @@ import {
   MessageOptions
 } from 'discord.js'
 import { Pokemon } from './types'
-import { Obj, randomNumber } from '@eb3n/outils'
+import { Obj, randomNumber } from 'tsu'
+
 import { pokemon } from './assets/pokemon.json'
 
 export const DEX_NUMBERS = {
