@@ -12,6 +12,10 @@ export function help(message: Message): void {
         value: '• [time]: a number between 30 and 600\n• shorthand: `%ac`'
       },
       {
+        name: '`%choose [options]`',
+        value: '• [options]: a list of options, wrapped in double quotes'
+      },
+      {
         name: '`%decide [query]`',
         value: '• [query]: a yes/no question to ask'
       },

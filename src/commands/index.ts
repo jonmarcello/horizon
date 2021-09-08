@@ -1,4 +1,5 @@
 export * from './acdraw'
+export * from './choose'
 export * from './decide'
 export * from './help'
 export * from './pokedraw'
