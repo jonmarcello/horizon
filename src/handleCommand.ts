@@ -6,7 +6,9 @@ import {
   help,
   pokedraw,
   pokeguess,
-  stop
+  say,
+  stop,
+  unkify
 } from './commands'
 import { store } from './store'
 import { sendEmbed, splitMessage } from './utils'
@@ -75,6 +77,10 @@ export function handleCommand(message: Message): void {
       }
       break
 
+    case 'say':
+      say(message, args)
+      break
+
     case 'end':
     case 'stop':
       if (isAllowedChannel) {
@@ -84,5 +90,11 @@ export function handleCommand(message: Message): void {
           sendEmbed(message, 'No game is currently active.', 'error')
         }
       }
+      break
+
+    case 'unk':
+    case 'unkify':
+      unkify(message, args)
+      break
   }
 }
