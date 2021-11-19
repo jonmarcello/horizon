@@ -1,2 +1,2 @@
-web: yarn start
-worker: yarn start
+web: pnpm start
+worker: pnpm start
