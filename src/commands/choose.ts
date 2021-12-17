@@ -16,7 +16,7 @@ export function choose(message: Message, args: string): void {
   const option = options[randomNumber(options.length)]
   const embed = {
     color: '#6366F1',
-    title: '[?] A decision has been made...',
+    title: 'A decision has been made...',
     description: capitalise(option)
   }
 
