@@ -9,6 +9,8 @@ export function choose(message: Message, args: string): void {
       'Please provide a list of choices, separated by `/`s (eg. `%choose choice1 / choice2`).',
       'error'
     )
+
+    return
   }
 
   const options = args.split('/').map((s) => s.trim())
