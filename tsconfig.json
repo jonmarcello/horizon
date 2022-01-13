@@ -9,7 +9,7 @@
     "noEmit": false,
     "noImplicitReturns": true,
     "noUnusedLocals": false,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "outDir": "dist",
     "resolveJsonModule": true,
     "sourceMap": true,

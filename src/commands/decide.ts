@@ -1,13 +1,20 @@
-import { Message } from 'discord.js'
-import { send } from '../utils'
-import { randomChance, capitalise } from 'tsu'
+import { Client, Message } from 'discord.js'
+import { capitalise, randomChance } from 'tsu'
+import { Color } from '../types'
+import { prettySend } from '../utils'
 
-export function decide(message: Message, query: string): void {
-  const embed = {
-    color: '#6366F1',
-    title: capitalise(query, true),
-    description: randomChance(2) ? 'Yes! :D' : 'No. :('
-  }
+export function run(message: Message, args: string[], client: Client): void {
+  const result = randomChance(2)
 
-  send(message, { embed })
+  prettySend(message, {
+    title: capitalise(args.join(' ').trim()),
+    description: result ? 'Yes' : 'No',
+    color: result ? Color.SUCCESS : Color.ERROR
+  })
+}
+
+export const opts = {
+  name: 'decide',
+  description: '',
+  aliases: ['yn']
 }

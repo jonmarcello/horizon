@@ -1,8 +1,8 @@
 import { Message, MessageEmbedOptions } from 'discord.js'
 import { capitalise, randomNumber } from 'tsu'
 import { GameType, Gen } from '../types'
-import { store } from '../store'
-import { getRandomPokemon, send, sendEmbed, DEX_NUMBERS } from '../utils'
+import { store } from '../old_store'
+import { getRandomPokemon, send, sendEmbed, DEX_NUMBERS } from '../old_utils'
 import { fakemon } from '../assets/pokemon.json'
 
 function generateRandomName(): string {

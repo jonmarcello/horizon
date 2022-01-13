@@ -1,29 +1,25 @@
-import {
-  GameType,
-  HorizonActions,
-  HorizonGetters,
-  HorizonState,
-  HorizonStore
-} from './types'
 import { Fn } from 'tsu'
+import { GameType } from './types'
 
-const state: HorizonState = {
-  gameType: GameType.NONE,
-  timeout: null
+const state = {
+  currentGame: GameType.NONE,
+  timeout: null as NodeJS.Timeout | null
 }
 
-const actions: HorizonActions = {
+const actions = {
   startGame(type: GameType): void {
-    state.gameType = type
+    state.currentGame = type
   },
+
   endGame(): void {
-    state.gameType = GameType.NONE
+    state.currentGame = GameType.NONE
     this.clearTimeout()
   },
 
-  setTimeout(fn: Fn, time: number): void {
-    state.timeout = setTimeout(fn, time)
+  setTimeout(fn: Fn, duration: number): void {
+    state.timeout = setTimeout(fn, duration)
   },
+
   clearTimeout(): void {
     if (state.timeout) {
       clearTimeout(state.timeout)
@@ -31,12 +27,12 @@ const actions: HorizonActions = {
   }
 }
 
-const getters: HorizonGetters = {
-  getIsGameActive: () => state.gameType !== GameType.NONE,
-  getGameType: () => state.gameType
+const getters = {
+  isGameInProgress: () => state.currentGame !== GameType.NONE,
+  currentGame: () => state.currentGame
 }
 
-export const store: HorizonStore = {
+export const store = {
   ...actions,
   ...getters
 }

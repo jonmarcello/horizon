@@ -1,38 +1,49 @@
-import Discord, { TextChannel } from 'discord.js'
+import Discord from 'discord.js'
+import { readdirSync } from 'fs'
+import { Obj } from 'tsu'
 import dotenv from 'dotenv'
+import { Command } from './types'
 import { handleCommand } from './handleCommand'
-import { randomChance } from 'tsu'
+import { handleMessage } from './handleMessage'
 
-// load env vars
+// load env vars to process.env
 dotenv.config()
 
-// get discord client
-const client = new Discord.Client()
+async function init() {
+  const commandFiles = readdirSync('./src/commands')
 
-client.on('message', (message) => {
-  // make bot ignore own messages
-  if (message.author === client.user) return
+  const commands = await commandFiles.reduce(async (acc, file) => {
+    const command: Command = await import(`./commands/${file}`)
+    const commandName = file.split('.ts')[0]
 
-  if (message.content.startsWith(process.env.DISCORD_PREFIX as string)) {
-    handleCommand(message)
-  } else if (randomChance(500)) {
-    message.react('👍')
+    const next = { ...(await acc), [commandName]: command }
 
-    if (message.guild?.id === process.env.SERVER_HORIZON) {
-      const THUMBS_UP = client.channels.cache.get(
-        process.env.CHANNEL_HB_THUMBS_UP as string
-      ) as TextChannel
+    command.opts?.aliases?.forEach((alias) => {
+      next[alias] = command
+    })
 
-      THUMBS_UP.send(
-        `I liked **${message.author.username}**'s comment:\n> **${message.content}**`
-      )
+    return next
+  }, Promise.resolve({} as Obj<Command>))
+
+  const client = new Discord.Client()
+
+  client.on('message', (message) => {
+    if (message.author.bot) return
+
+    if (message.content.startsWith(process.env.COMMAND_PREFIX as string)) {
+      handleCommand(client, commands, message)
+    } else {
+      handleMessage(client, message)
     }
-  }
-})
+  })
 
-client.on('ready', () => {
-  client.user?.setActivity('the sunset.', { type: 'WATCHING' })
-  console.log('online')
-})
+  client.on('ready', () => {
+    client.user?.setActivity('the sunset.', { type: 'WATCHING' })
+    const timestamp = new Date().toLocaleString('en-GB')
+    console.log(`[${timestamp}]: Bot online.`)
+  })
 
-client.login(process.env.DISCORD_API_KEY)
+  client.login(process.env.DISCORD_API_KEY)
+}
+
+init()

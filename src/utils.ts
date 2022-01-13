@@ -1,34 +1,47 @@
+import { MessageOptions } from 'child_process'
 import {
-  Message,
   APIMessageContentResolvable,
-  MessageAdditions,
-  MessageOptions
+  Message,
+  MessageAdditions
 } from 'discord.js'
-import { Pokemon } from './types'
-import { Obj, randomNumber } from 'tsu'
+import { Color } from './types'
 
-import { pokemon } from './assets/pokemon.json'
+/* general */
 
-export const DEX_NUMBERS = {
-  gen1: { min: 1, max: 151 },
-  gen2: { min: 152, max: 251 },
-  gen3: { min: 252, max: 386 },
-  gen4: { min: 387, max: 493 },
-  gen5: { min: 494, max: 649 },
-  gen6: { min: 650, max: 721 },
-  gen7: { min: 722, max: 809 },
-  gen8: { min: 810, max: 898 },
-  all: { min: 1, max: 898 }
-}
-
-export function splitMessage(messageContent: string): [string, string] {
-  if (!messageContent || messageContent.length === 0) {
-    return ['', '']
+export function removeItemFromArray<T>(item: T, array: T[]): T[] {
+  if (!array.includes(item) || array.length < 1) {
+    return array
   }
 
-  const [first, ...rest] = messageContent.substr(1).split(/(?<=^\S+)\s/)
+  const idx = array.indexOf(item)
+  return [...array.slice(0, idx), ...array.slice(idx + 1)]
+}
 
-  return [first.toLowerCase(), rest[0]]
+/*  discord */
+export function prettySend(
+  message: Message,
+  {
+    title,
+    description,
+    footer,
+    color = Color.DEFAULT
+  }: {
+    title?: string
+    description?: string
+    footer?: string
+    color?: Color
+  } = {}
+): void {
+  message.channel.send({
+    embed: {
+      title,
+      description,
+      color,
+      footer: {
+        text: footer
+      }
+    }
+  })
 }
 
 export function send(
@@ -39,40 +52,23 @@ export function send(
         split?: false | undefined
       })
     | MessageAdditions
-): Promise<Message> {
-  return message.channel.send(content || '_ _')
+): void {
+  message.channel.send(content || '_ _')
 }
 
-export function sendEmbed(
-  message: Message,
-  error: string,
-  type: 'info' | 'error' = 'info'
-): Promise<Message> {
-  const colors = {
-    info: '#6366F1',
-    error: '#B91C1C'
-  }
-
-  return message.channel.send({
-    embed: {
-      color: colors[type],
-      description: error
-    }
+export function sendActiveGameError(message: Message): void {
+  prettySend(message, {
+    title: 'Error:',
+    description: 'A game is already in progress.',
+    footer: 'Hint: a game may be active in another server. Be respectful!',
+    color: Color.ERROR
   })
 }
 
-export function reply(message: Message, content: string): void {
-  message.reply(content || '_ _')
-}
-
-export function getRandomPokemon(min = 0, max = pokemon.length): Pokemon {
-  return pokemon[randomNumber(max, min)]
-}
-
-export async function sleep(duration: number): Promise<unknown> {
-  return new Promise((resolve) => setTimeout(resolve, duration))
-}
-
-export function sortObjectEntries(obj: Obj<number>): Obj<number> {
-  return Object.fromEntries(Object.entries(obj).sort((a, b) => b[1] - a[1]))
+export function isPermittedHorizonChannel(channelId: number): boolean {
+  return [
+    Number(process.env?.CHANNEL_HB_DISCORDGAMES),
+    Number(process.env?.CHANNEL_HB_TESTING),
+    Number(process.env?.CHANNEL_HB_HORIZONLIKES)
+  ].includes(channelId)
 }

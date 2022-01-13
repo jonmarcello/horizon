@@ -1,5 +1,5 @@
 import { randomNumber } from 'tsu'
-import { send } from '../utils'
+import { send } from '../old_utils'
 import { dictionary, typos } from '../assets/unkie.json'
 import { Message } from 'discord.js'
 

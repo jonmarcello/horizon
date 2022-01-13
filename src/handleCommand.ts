@@ -1,100 +1,51 @@
-import { Message } from 'discord.js'
-import {
-  acdraw,
-  choose,
-  decide,
-  help,
-  pokedraw,
-  pokeguess,
-  say,
-  stop,
-  unkify
-} from './commands'
-import { store } from './store'
-import { sendEmbed, splitMessage } from './utils'
+import { Client, Message, NewsChannel, TextChannel } from 'discord.js'
+import { Obj } from 'tsu'
+import { Command } from './types'
 
-function sendActiveGameEmbed(message: Message): void {
-  sendEmbed(
-    message,
-    'A game is currently active. Please finish playing, or use `%stop` to end it early',
-    'error'
-  )
+function log({
+  command,
+  args,
+  channelName,
+  author
+}: {
+  command: string
+  args: string[]
+  channelName: string
+  author: string
+}): void {
+  const timestamp = new Date().toLocaleString('en-GB')
+  const commandStr = `[${timestamp}]: ${author} ran [${command}] in [#${channelName}]`
+  const argsStr = args.length
+    ? `\n${' '.repeat(13)}arguments: [${args.join(', ')}]`
+    : ''
+  console.log(`${commandStr}${argsStr}`)
 }
 
-export function handleCommand(message: Message): void {
-  const [command, args] = splitMessage(message.content)
-  const isAllowedChannel =
-    message.channel.id === process.env.CHANNEL_HB_POKEDRAW ||
-    message.channel.id === process.env.CHANNEL_HB_TESTING ||
-    message.channel.id === process.env.CHANNEL_MR_BOTS
+export function handleCommand(
+  client: Client,
+  commands: Obj<Command>,
+  message: Message
+): void {
+  // const [commandName, args = ''] = message.content.slice(1).split(/(?<=^\S+)\s/) // args: string
+  const [commandName, ...args] = message.content.slice(1).split(' ') // args: string[]
+  const command = commands[commandName]
 
-  console.log({ command, args })
+  // exit if command doesn't exist, or is invoked in DMs
+  if (!command || !message.guild) return
 
-  switch (command) {
-    case 'acdraw':
-    case 'ac':
-      if (isAllowedChannel) {
-        if (store.getIsGameActive()) {
-          sendActiveGameEmbed(message)
-        } else {
-          acdraw(message, args)
-        }
-      }
-      break
+  // see who broke it this time
+  log({
+    command: commandName,
+    args,
+    channelName: (<TextChannel | NewsChannel>message.channel).name,
+    author: message.author.username
+  })
 
-    case 'choose':
-      choose(message, args)
-      break
-
-    case 'decide':
-    case 'd':
-      decide(message, args)
-      break
-
-    case 'help':
-      help(message)
-      break
-
-    case 'pokedraw':
-    case 'pd':
-      if (isAllowedChannel) {
-        if (store.getIsGameActive()) {
-          sendActiveGameEmbed(message)
-        } else {
-          pokedraw(message, args)
-        }
-      }
-      break
-
-    case 'pokeguess':
-    case 'pg':
-      if (isAllowedChannel) {
-        if (store.getIsGameActive()) {
-          sendActiveGameEmbed(message)
-        } else {
-          pokeguess(message, args)
-        }
-      }
-      break
-
-    case 'say':
-      say(message, args)
-      break
-
-    case 'end':
-    case 'stop':
-      if (isAllowedChannel) {
-        if (store.getIsGameActive()) {
-          stop(message)
-        } else {
-          sendEmbed(message, 'No game is currently active.', 'error')
-        }
-      }
-      break
-
-    case 'unk':
-    case 'unkify':
-      unkify(message, args)
-      break
+  try {
+    command.run(message, args, client)
+  } catch (err) {
+    if (command.onError) {
+      command.onError(message, args, <Error>err)
+    }
   }
 }

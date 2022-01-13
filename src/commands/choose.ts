@@ -1,26 +1,44 @@
-import { Message } from 'discord.js'
-import { capitalise, randomNumber } from 'tsu'
-import { send, sendEmbed } from '../utils'
+import { Client, Message } from 'discord.js'
+import { randomNumber } from 'tsu'
+import { Color } from '../types'
+import { prettySend } from '../utils'
 
-export function choose(message: Message, args: string): void {
-  if (!args || !args.includes('/')) {
-    sendEmbed(
-      message,
-      'Please provide a list of choices, separated by `/`s (eg. `%choose choice1 / choice2`).',
-      'error'
-    )
-
-    return
+export function run(message: Message, args: string[], client: Client): void {
+  if (!args?.length) {
+    throw new Error('No arguments provided.')
   }
 
-  const options = args.split('/').map((s) => s.trim())
+  const joinedArgs = args.join(' ')
+
+  if (!joinedArgs.includes('/')) {
+    throw new Error('No options found.')
+  }
+
+  const options = joinedArgs
+    .replace(/^\/|\/$/g, '')
+    .split('/')
+    .map((s) => s.trim())
+    .map((s) => (s === '' ? '<empty>' : s))
 
   const option = options[randomNumber(options.length)]
-  const embed = {
-    color: '#6366F1',
-    title: 'A decision has been made...',
-    description: capitalise(option)
-  }
 
-  send(message, { embed })
+  prettySend(message, {
+    title: 'Decision:',
+    description: option
+  })
+}
+
+export function onError(message: Message, args: string, error: Error): void {
+  prettySend(message, {
+    title: 'Error:',
+    description: error.message,
+    footer: 'Hint: did you separate your options with /s?',
+    color: Color.ERROR
+  })
+}
+
+export const opts = {
+  name: 'choose',
+  description: 'Randomly selects an item from a list of choices.',
+  aliases: []
 }

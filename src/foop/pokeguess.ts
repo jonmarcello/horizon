@@ -5,10 +5,10 @@ import {
   sleep,
   sortObjectEntries,
   DEX_NUMBERS
-} from '../utils'
+} from '../old_utils'
 import { Collection, Message, MessageEmbedOptions } from 'discord.js'
 import { GameType, Gen, Pokemon } from '../types'
-import { store } from '../store'
+import { store } from '../old_store'
 import { Obj, capitalise } from 'tsu'
 
 function pargeArgs(args: string): [Gen, number, boolean] {
