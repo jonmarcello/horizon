@@ -5,9 +5,9 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc",
-    "dev": "nodemon src/app.ts",
-    "serve": "nodemon src/app.ts",
-    "start": "node dist/app.js"
+    "dev": "NODE_ENV=development nodemon src/app.ts",
+    "serve": "NODE_ENV=development nodemon src/app.ts ",
+    "start": "NODE_ENV=production node dist/app.js"
   },
   "main": "app.js",
   "repository": "git@github.com:ebxn/horizon",

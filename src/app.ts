@@ -13,7 +13,15 @@ async function init() {
   const commandFiles = readdirSync('./src/commands')
 
   const commands = await commandFiles.reduce(async (acc, file) => {
-    const command: Command = await import(`./commands/${file}`)
+    let path
+
+    if (process.env.NODE_ENV === 'production') {
+      path = `./commands/${file.replace('.ts', '.js')}`
+    } else {
+      path = `./commands/${file}`
+    }
+
+    const command: Command = await import(path)
     const commandName = file.split('.ts')[0]
 
     const next = { ...(await acc), [commandName]: command }
