@@ -164,10 +164,10 @@ export function run(message: Message, args: string[], client: Client): void {
     return
   }
 
-  // const solution = solutions[randomNumber(solutions.length)]
+  const solution = solutions[randomNumber(solutions.length)]
   // const solution = 'still' // guess: SILLY
   // const solution = 'sober' // guess: SEWER
-  const solution = 'folio' // guess: FOLLY
+  // const solution = 'folio' // guess: FOLLY
   console.log(`WORDLE SOLUTION: ${solution}`)
 
   const guesses: Guess[] = []
@@ -269,16 +269,6 @@ export function run(message: Message, args: string[], client: Client): void {
   })
 
   store.startGame(guildId, GameType.WORDLE)
-
-  // 2. set up game loop (10 times):
-  // -> listen for guess
-  // -> player makes a guess
-  // -> check if word matches
-  //    -> true: win
-  //    -> false:
-  //      -> find orange/greens
-  //      -> update keyboard
-  //      -> print stuff
 }
 
 export function onError(message: Message, args: string, error: Error): void {
