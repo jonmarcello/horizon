@@ -65,7 +65,8 @@ function printGuesses(
       if (state === KeyState.IN_WORD) {
         formattedKey = `**\`${key.toUpperCase()}\`**`
       } else if (state === KeyState.NOT_IN_WORD) {
-        formattedKey = `~~\`${key.toUpperCase()}\`~~`
+        formattedKey = `||\`${key.toUpperCase()}\`||`
+        // formattedKey = `~~\`${key.toUpperCase()}\`~~`
       } else {
         formattedKey = key
       }
@@ -180,7 +181,7 @@ export function run(message: Message, args: string[], client: Client): void {
   prettySend(message, {
     title: 'Wordle',
     description: 'Game started! Make your guesses with `=WORD`!',
-    footer: 'Hint: Bold letters are correct, linethrough letters are incorrect!'
+    footer: 'Hint: all solutions are 5 letters long!'
   })
 
   collector.on('collect', (m) => {
