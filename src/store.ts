@@ -11,7 +11,6 @@ const state = {
 const actions = {
   startGame(serverId: string, type: GameType): void {
     state.serverGames[serverId] = type
-    console.log('Updated', JSON.stringify(state.serverGames))
   },
 
   endGame(serverId: string): void {
