@@ -84,11 +84,9 @@ function printGuesses(
 function evaluateGuess(guess: string, solution: string): EvaluationResults {
   const guessChars = chars(guess)
   const solutionChars = chars(solution)
-  let potentialIncorrectChars = solutionChars.filter((_, i) => {
-    const r = guessChars[i] !== solutionChars[i]
-    console.log(`${guessChars[i]} === ${solutionChars[i]} ${r}`)
-    return r
-  })
+  let potentialIncorrectChars = solutionChars.filter(
+    (_, i) => guessChars[i] !== solutionChars[i]
+  )
 
   return guessChars.reduce<EvaluationResults>(
     (acc, char, idx) => {
