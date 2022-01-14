@@ -84,25 +84,26 @@ function printGuesses(
 function evaluateGuess(guess: string, solution: string): EvaluationResults {
   const guessChars = chars(guess)
   const solutionChars = chars(solution)
-  let potentialChars = solutionChars.filter(
-    (_, i) => guessChars[i] !== solutionChars[i]
-  )
+  let potentialIncorrectChars = solutionChars.filter((_, i) => {
+    const r = guessChars[i] !== solutionChars[i]
+    console.log(`${guessChars[i]} === ${solutionChars[i]} ${r}`)
+    return r
+  })
 
   return guessChars.reduce<EvaluationResults>(
     (acc, char, idx) => {
       if (guess[idx] === solutionChars[idx]) {
         // it's in the word, in RIGHT place
-
-        potentialChars = removeItemFromArray(char, potentialChars)
-
         return {
           emojis: [...acc.emojis, Emoji.GREEN],
           keyStates: [...acc.keyStates, { key: char, state: KeyState.IN_WORD }]
         }
-      } else if (potentialChars.includes(char)) {
+      } else if (potentialIncorrectChars.includes(char)) {
         // it's in the word, in WRONG place
-
-        potentialChars = removeItemFromArray(char, potentialChars)
+        potentialIncorrectChars = removeItemFromArray(
+          char,
+          potentialIncorrectChars
+        )
 
         return {
           emojis: [...acc.emojis, Emoji.YELLOW],
@@ -142,10 +143,7 @@ function updateKeyboard(
 function filter(message: Message): boolean {
   const content = message.content.toLowerCase().replace(/\s/g, '')
 
-  return (
-    ['%stop', '%end'].includes(content) || /^=[a-z]+/.test(content)
-    // /^=[a-z][a-z][a-z][a-z][a-z]$/.test(content)
-  )
+  return ['%stop', '%end'].includes(content) || /^=\s*[a-z]+/.test(content)
 }
 
 export function run(message: Message, args: string[], client: Client): void {
@@ -168,6 +166,7 @@ export function run(message: Message, args: string[], client: Client): void {
   // const solution = 'still' // guess: SILLY
   // const solution = 'sober' // guess: SEWER
   // const solution = 'folio' // guess: FOLLY
+  // const solution = 'bleed' // guess: SIEVE/EVADE
   console.log(`WORDLE SOLUTION: ${solution}`)
 
   const guesses: Guess[] = []
