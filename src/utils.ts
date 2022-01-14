@@ -60,7 +60,7 @@ export function sendActiveGameError(message: Message): void {
   prettySend(message, {
     title: 'Error:',
     description: 'A game is already in progress.',
-    footer: 'Hint: a game may be active in another server. Be respectful!',
+    footer: 'Hint: you can end an active game with %stop!',
     color: Color.ERROR
   })
 }

@@ -149,7 +149,9 @@ function filter(message: Message): boolean {
 }
 
 export function run(message: Message, args: string[], client: Client): void {
-  if (message.guild?.id === process.env.SERVER_HB) {
+  const guildId = message.guild!.id
+
+  if (guildId === process.env.SERVER_HB) {
     const channelId = Number(message.channel.id)
 
     if (!isPermittedHorizonChannel(channelId)) {
@@ -157,7 +159,7 @@ export function run(message: Message, args: string[], client: Client): void {
     }
   }
 
-  if (store.isGameInProgress()) {
+  if (store.isGameInProgress(guildId)) {
     sendActiveGameError(message)
     return
   }
@@ -215,7 +217,7 @@ export function run(message: Message, args: string[], client: Client): void {
         infoEmojis: [Emoji.GREEN, Emoji.GREEN, Emoji.GREEN, Emoji.GREEN, Emoji.GREEN]
       })
       collector.stop('WIN')
-      store.endGame()
+      store.endGame(guildId)
     } else {
       // valid, incorrect guess
       const { emojis, keyStates } = evaluateGuess(guess, solution)
@@ -236,7 +238,7 @@ export function run(message: Message, args: string[], client: Client): void {
 
     if (round > 10) {
       collector.stop('LOSE')
-      store.endGame()
+      store.endGame(guildId)
     }
   })
 
@@ -266,7 +268,7 @@ export function run(message: Message, args: string[], client: Client): void {
     }
   })
 
-  store.startGame(GameType.WORDLE)
+  store.startGame(guildId, GameType.WORDLE)
 
   // 2. set up game loop (10 times):
   // -> listen for guess

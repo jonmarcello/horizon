@@ -4,7 +4,9 @@ import { prettySend } from '../utils'
 import { store } from '../store'
 
 export function run(message: Message, args: string[], client: Client): void {
-  if (!store.isGameInProgress()) {
+  const guildId = message.guild!.id
+
+  if (!store.isGameInProgress(guildId)) {
     throw new Error('There are no games currently being played.')
   }
 
@@ -14,7 +16,7 @@ export function run(message: Message, args: string[], client: Client): void {
     description: `**${author}** has ended a game early. Boo them!`
   })
 
-  store.endGame()
+  store.endGame(guildId)
 }
 
 export function onError(message: Message, args: string, error: Error): void {

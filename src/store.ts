@@ -1,34 +1,27 @@
-import { Fn } from 'tsu'
 import { GameType } from './types'
 
 const state = {
   currentGame: GameType.NONE,
-  timeout: null as NodeJS.Timeout | null
+  serverGames: {
+    [process.env.SERVER_HB!]: GameType.NONE,
+    [process.env.SERVER_MR!]: GameType.NONE
+  }
 }
 
 const actions = {
-  startGame(type: GameType): void {
-    state.currentGame = type
+  startGame(serverId: string, type: GameType): void {
+    state.serverGames[serverId] = type
+    console.log('Updated', JSON.stringify(state.serverGames))
   },
 
-  endGame(): void {
-    state.currentGame = GameType.NONE
-    this.clearTimeout()
-  },
-
-  setTimeout(fn: Fn, duration: number): void {
-    state.timeout = setTimeout(fn, duration)
-  },
-
-  clearTimeout(): void {
-    if (state.timeout) {
-      clearTimeout(state.timeout)
-    }
+  endGame(serverId: string): void {
+    state.serverGames[serverId] = GameType.NONE
   }
 }
 
 const getters = {
-  isGameInProgress: () => state.currentGame !== GameType.NONE,
+  isGameInProgress: (serverId: string) =>
+    state.serverGames[serverId] !== GameType.NONE,
   currentGame: () => state.currentGame
 }
 
