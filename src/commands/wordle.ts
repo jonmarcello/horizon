@@ -283,5 +283,5 @@ export function onError(message: Message, args: string, error: Error): void {
 export const opts = {
   name: 'wordle',
   description: '',
-  aliases: []
+  aliases: ['w']
 }
