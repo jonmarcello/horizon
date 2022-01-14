@@ -84,15 +84,12 @@ function printGuesses(
 function evaluateGuess(guess: string, solution: string): EvaluationResults {
   const guessChars = chars(guess)
   const solutionChars = chars(solution)
-  let potentialChars = solutionChars
+  let potentialChars = solutionChars.filter(
+    (_, i) => guessChars[i] !== solutionChars[i]
+  )
 
   return guessChars.reduce<EvaluationResults>(
     (acc, char, idx) => {
-      const charIdxsInSolutionChars = solutionChars.reduce<number[]>(
-        (a, s, i2) => (s === char ? [...a, i2] : a),
-        []
-      )
-
       if (guess[idx] === solutionChars[idx]) {
         // it's in the word, in RIGHT place
 
@@ -165,7 +162,10 @@ export function run(message: Message, args: string[], client: Client): void {
     return
   }
 
-  const solution = solutions[randomNumber(solutions.length)]
+  // const solution = solutions[randomNumber(solutions.length)]
+  // const solution = 'still' // guess: SILLY
+  // const solution = 'sober' // guess: SEWER
+  const solution = 'folio' // guess: FOLLY
   console.log(`WORDLE SOLUTION: ${solution}`)
 
   const guesses: Guess[] = []
@@ -175,7 +175,6 @@ export function run(message: Message, args: string[], client: Client): void {
   )
 
   let round = 1
-  let latestAuthor = ''
 
   const collector = message.channel.createMessageCollector(filter)
 
@@ -193,8 +192,6 @@ export function run(message: Message, args: string[], client: Client): void {
     }
 
     const guess = content.slice(1)
-    const author = m.author.username
-    latestAuthor = author
 
     if (
       (!solutions.includes(guess) && !validGuesses.includes(guess)) ||
@@ -248,7 +245,7 @@ export function run(message: Message, args: string[], client: Client): void {
       case 'WIN':
         prettySend(message, {
           title: 'Congration, you done it!',
-          description: `Winner: **${latestAuthor}**\nWord: ${solution.toUpperCase()}\nRounds: ${round} / 10\n${guesses.reduce(
+          description: `Word: **${solution.toUpperCase()}**\nRounds: ${round} / 10\n${guesses.reduce(
             (acc, guess) => `${acc}\n${guess.infoEmojis.join('')}`,
             ''
           )}`,
