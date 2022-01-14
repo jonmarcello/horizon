@@ -4,7 +4,8 @@ const state = {
   currentGame: GameType.NONE,
   serverGames: {
     [process.env.SERVER_HB!]: GameType.NONE,
-    [process.env.SERVER_MR!]: GameType.NONE
+    [process.env.SERVER_MR!]: GameType.NONE,
+    [process.env.SERVER_OS!]: GameType.NONE
   }
 }
 
