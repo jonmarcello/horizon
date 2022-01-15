@@ -1,7 +1,7 @@
 import { Client, Message } from 'discord.js'
 import { randomNumber } from 'tsu'
 import { Color } from '../types'
-import { prettySend } from '../utils'
+import { send } from '../utils'
 
 export function run(message: Message, args: string[], client: Client): void {
   if (!args?.length) {
@@ -22,14 +22,14 @@ export function run(message: Message, args: string[], client: Client): void {
 
   const option = options[randomNumber(options.length)]
 
-  prettySend(message, {
+  send(message, {
     title: 'Decision:',
     description: option
   })
 }
 
 export function onError(message: Message, args: string, error: Error): void {
-  prettySend(message, {
+  send(message, {
     title: 'Error:',
     description: error.message,
     footer: 'Hint: did you separate your options with /s?',
@@ -40,5 +40,5 @@ export function onError(message: Message, args: string, error: Error): void {
 export const opts = {
   name: 'choose',
   description: 'Randomly selects an item from a list of choices.',
-  aliases: []
+  aliases: ['pick', 'select']
 }

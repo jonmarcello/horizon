@@ -1,12 +1,12 @@
 import { Client, Message } from 'discord.js'
 import { capitalise, randomChance } from 'tsu'
 import { Color } from '../types'
-import { prettySend } from '../utils'
+import { send } from '../utils'
 
 export function run(message: Message, args: string[], client: Client): void {
   const result = randomChance(2)
 
-  prettySend(message, {
+  send(message, {
     title: capitalise(args.join(' ').trim()),
     description: result ? 'Yes' : 'No',
     color: result ? Color.SUCCESS : Color.ERROR
@@ -15,6 +15,6 @@ export function run(message: Message, args: string[], client: Client): void {
 
 export const opts = {
   name: 'decide',
-  description: '',
+  description: 'Makes a coin flip decision.',
   aliases: ['yn']
 }

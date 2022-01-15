@@ -1,7 +1,7 @@
 import { Client, Message } from 'discord.js'
 import { isBlank, isEmpty, randomNumber } from 'tsu'
 import { Color } from '../types'
-import { prettySend } from '../utils'
+import { send } from '../utils'
 
 export function run(message: Message, args: string[], client: Client): void {
   const trimmedArgs = args.filter((arg) => !isBlank(arg))
@@ -28,14 +28,14 @@ export function run(message: Message, args: string[], client: Client): void {
     () => randomNumber(Number(nSides)) + 1
   )
 
-  prettySend(message, {
+  send(message, {
     title: 'Rolls:',
     description: `[${rolls.join(', ')}]`
   })
 }
 
 export function onError(message: Message, args: string, error: Error): void {
-  prettySend(message, {
+  send(message, {
     title: 'Error:',
     description: error.message,
     footer: 'Hint: did you provide a positive number of dice/sides?',
@@ -45,6 +45,6 @@ export function onError(message: Message, args: string, error: Error): void {
 
 export const opts = {
   name: 'roll',
-  description: 'Rolls specified dice.',
-  aliases: []
+  description: 'Rolls dice.',
+  aliases: ['r']
 }

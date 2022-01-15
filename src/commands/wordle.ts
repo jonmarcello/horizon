@@ -3,18 +3,12 @@ import { chars, randomNumber } from 'tsu'
 import { Color, GameType } from '../types'
 import {
   isPermittedHorizonChannel,
-  prettySend,
   removeItemFromArray,
+  send,
   sendActiveGameError
 } from '../utils'
 import { store } from '../store'
 import { qwerty, solutions, validGuesses } from '../assets/wordle.json'
-
-enum KeyState {
-  CLEAN,
-  NOT_IN_WORD,
-  IN_WORD
-}
 
 enum Emoji {
   GREEN = ':green_square:',
@@ -22,17 +16,25 @@ enum Emoji {
   BLACK = ':black_large_square:'
 }
 
+enum KeyState {
+  CLEAN,
+  NOT_IN_WORD,
+  IN_WORD
+}
+
 interface Guess {
   word: string
   infoEmojis: Emoji[]
+}
+
+interface Keyboard {
+  [key: string]: KeyState
 }
 
 interface EvaluationResults {
   emojis: Emoji[]
   keyStates: { key: string; state: KeyState }[]
 }
-
-type Keyboard = Record<string, KeyState>
 
 /* * */
 
@@ -57,26 +59,27 @@ function printGuesses(
     return `${acc}\n\n${wordEmojis}\n${infoEmojis}`
   }, '')
 
-  const keyboardStr = Object.entries(keyboard).reduce(
-    (acc, [key, state], idx) => {
-      const isNewLine = idx === 10 || idx === 19
-      let formattedKey
+  const keyboardStr = Object.entries(keyboard).reduce((acc, [key, state]) => {
+    let formattedKeyStr = ''
 
-      if (state === KeyState.IN_WORD) {
-        formattedKey = `**\`${key.toUpperCase()}\`**`
-      } else if (state === KeyState.NOT_IN_WORD) {
-        formattedKey = `||\`${key.toUpperCase()}\`||`
-        // formattedKey = `~~\`${key.toUpperCase()}\`~~`
-      } else {
-        formattedKey = key
-      }
+    if (key === 'a') {
+      formattedKeyStr += '\n     '
+    } else if (key === 'z') {
+      formattedKeyStr += '\n        '
+    }
 
-      return `${acc}${isNewLine ? '\n' : ''}${formattedKey} `
-    },
-    ''
-  )
+    if (state === KeyState.IN_WORD) {
+      formattedKeyStr += `**\`${key.toUpperCase()}\`**`
+    } else if (state === KeyState.NOT_IN_WORD) {
+      formattedKeyStr += `||\`${key.toUpperCase()}\`||`
+    } else {
+      formattedKeyStr += key
+    }
 
-  prettySend(message, {
+    return `${acc}${formattedKeyStr} `
+  }, '')
+
+  send(message, {
     title: 'Wordle',
     description: `${roundStr}\n${emojisStr}\n\n${keyboardStr}`
   })
@@ -139,7 +142,7 @@ function updateKeyboard(
   })
 }
 
-function filter(message: Message): boolean {
+function collectorFilter(message: Message): boolean {
   const content = message.content.toLowerCase().replace(/\s/g, '')
 
   return ['%stop', '%end'].includes(content) || /^=\s*[a-z]+/.test(content)
@@ -147,6 +150,7 @@ function filter(message: Message): boolean {
 
 export function run(message: Message, args: string[], client: Client): void {
   const guildId = message.guild!.id
+  const timeStarted = Date.now()
 
   if (guildId === process.env.SERVER_HB) {
     const channelId = Number(message.channel.id)
@@ -162,10 +166,6 @@ export function run(message: Message, args: string[], client: Client): void {
   }
 
   const solution = solutions[randomNumber(solutions.length)]
-  // const solution = 'still' // guess: SILLY
-  // const solution = 'sober' // guess: SEWER
-  // const solution = 'folio' // guess: FOLLY
-  // const solution = 'bleed' // guess: SIEVE/EVADE
   console.log(`WORDLE SOLUTION: ${solution}`)
 
   const guesses: Guess[] = []
@@ -174,11 +174,11 @@ export function run(message: Message, args: string[], client: Client): void {
     {}
   )
 
+  const collector = message.channel.createMessageCollector(collectorFilter)
+
   let round = 1
 
-  const collector = message.channel.createMessageCollector(filter)
-
-  prettySend(message, {
+  send(message, {
     title: 'Wordle',
     description: 'Game started! Make your guesses with `=WORD`!',
     footer: 'Hint: all solutions are 5 letters long!'
@@ -198,7 +198,7 @@ export function run(message: Message, args: string[], client: Client): void {
       guess.length !== 5
     ) {
       // not valid word
-      prettySend(message, {
+      send(message, {
         title: 'Invalid Word',
         description: `"${guess.toUpperCase()}" is not a valid word.`,
         color: Color.ERROR
@@ -208,7 +208,6 @@ export function run(message: Message, args: string[], client: Client): void {
     }
 
     if (guess === solution) {
-      // correct guess
       guesses.push({
         word: guess,
         // prettier-ignore
@@ -217,7 +216,6 @@ export function run(message: Message, args: string[], client: Client): void {
       collector.stop('WIN')
       store.endGame(guildId)
     } else {
-      // valid, incorrect guess
       const { emojis, keyStates } = evaluateGuess(guess, solution)
 
       // YUCKY MUTABLE EW
@@ -241,11 +239,20 @@ export function run(message: Message, args: string[], client: Client): void {
   })
 
   collector.on('end', (_, reason) => {
+    const timeEnded = Date.now()
+    const timeDiff = Math.floor((timeEnded - timeStarted) / 1000)
+    const minutes = Math.floor(timeDiff / 60)
+    const seconds = timeDiff % 60
+
+    const timeStr = minutes
+      ? `${minutes}:${seconds}`
+      : `0:${String(seconds).padStart(2, '0')}`
+
     switch (reason) {
       case 'WIN':
-        prettySend(message, {
+        send(message, {
           title: 'Congration, you done it!',
-          description: `Word: **${solution.toUpperCase()}**\nRounds: ${round} / 10\n${guesses.reduce(
+          description: `Word: **${solution.toUpperCase()}**\nRounds: ${round} / 10\nTime: ${timeStr}\n${guesses.reduce(
             (acc, guess) => `${acc}\n${guess.infoEmojis.join('')}`,
             ''
           )}`,
@@ -254,7 +261,7 @@ export function run(message: Message, args: string[], client: Client): void {
         break
 
       case 'LOSE':
-        prettySend(message, {
+        send(message, {
           title: 'Game over!',
           description: `Oh no, no one got it!\nThe word was: ||${solution.toUpperCase()}||.`,
           color: Color.ERROR
@@ -270,16 +277,15 @@ export function run(message: Message, args: string[], client: Client): void {
 }
 
 export function onError(message: Message, args: string, error: Error): void {
-  prettySend(message, {
+  send(message, {
     title: 'Error:',
     description: error.message,
-    // footer: 'Hint: ',
     color: Color.ERROR
   })
 }
 
 export const opts = {
   name: 'wordle',
-  description: '',
+  description: 'Play a game of wordle!',
   aliases: ['w']
 }

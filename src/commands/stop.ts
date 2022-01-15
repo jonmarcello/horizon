@@ -1,6 +1,6 @@
 import { Client, Message } from 'discord.js'
 import { Color } from '../types'
-import { prettySend } from '../utils'
+import { send } from '../utils'
 import { store } from '../store'
 
 export function run(message: Message, args: string[], client: Client): void {
@@ -12,7 +12,7 @@ export function run(message: Message, args: string[], client: Client): void {
 
   const author = message.author.username
 
-  prettySend(message, {
+  send(message, {
     description: `**${author}** has ended a game early. Boo them!`
   })
 
@@ -20,7 +20,7 @@ export function run(message: Message, args: string[], client: Client): void {
 }
 
 export function onError(message: Message, args: string, error: Error): void {
-  prettySend(message, {
+  send(message, {
     title: 'Error:',
     description: error.message,
     footer: 'Hint: are you sure a game is active?',
@@ -29,7 +29,7 @@ export function onError(message: Message, args: string, error: Error): void {
 }
 
 export const opts = {
-  name: 'choose',
-  description: '',
-  aliases: []
+  name: 'stop',
+  description: 'Stops the current game early.',
+  aliases: ['end']
 }

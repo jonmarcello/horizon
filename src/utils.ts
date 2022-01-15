@@ -1,9 +1,4 @@
-import { MessageOptions } from 'child_process'
-import {
-  APIMessageContentResolvable,
-  Message,
-  MessageAdditions
-} from 'discord.js'
+import { Message } from 'discord.js'
 import { Color } from './types'
 
 /* general */
@@ -18,7 +13,8 @@ export function removeItemFromArray<T>(item: T, array: T[]): T[] {
 }
 
 /*  discord */
-export function prettySend(
+
+export function send(
   message: Message,
   {
     title,
@@ -33,31 +29,12 @@ export function prettySend(
   } = {}
 ): void {
   message.channel.send({
-    embed: {
-      title,
-      description,
-      color,
-      footer: {
-        text: footer
-      }
-    }
+    embed: { title, description, color, footer: { text: footer } }
   })
 }
 
-export function send(
-  message: Message,
-  content:
-    | APIMessageContentResolvable
-    | (MessageOptions & {
-        split?: false | undefined
-      })
-    | MessageAdditions
-): void {
-  message.channel.send(content || '_ _')
-}
-
 export function sendActiveGameError(message: Message): void {
-  prettySend(message, {
+  send(message, {
     title: 'Error:',
     description: 'A game is already in progress.',
     footer: 'Hint: you can end an active game with %stop!',
