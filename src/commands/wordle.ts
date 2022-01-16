@@ -38,10 +38,12 @@ interface EvaluationResults {
 
 /* * */
 
+// convert a letter to its respective regional indicator emoji
 function toLetterEmoji(letter: string): string {
-  return `:regional_indicator_${letter}:`
+  return `:regional_indicator_${letter.toLowerCase()}:`
 }
 
+// display current round, previous guesses (and their results), and the keyboard
 function printGuesses(
   message: Message,
   {
@@ -85,6 +87,7 @@ function printGuesses(
   })
 }
 
+// compare the user's guess to the solution
 function evaluateGuess(guess: string, solution: string): EvaluationResults {
   const guessChars = chars(guess)
   const solutionChars = chars(solution)
@@ -126,6 +129,8 @@ function evaluateGuess(guess: string, solution: string): EvaluationResults {
   )
 }
 
+// update the keyboard with used keys
+// (mutates keyboard)
 function updateKeyboard(
   keyboard: Keyboard,
   keyStates: { key: string; state: KeyState }[]
@@ -142,6 +147,7 @@ function updateKeyboard(
   })
 }
 
+// filter valid guesses (= followed by 5 characters)
 function collectorFilter(message: Message): boolean {
   const content = message.content.toLowerCase().replace(/\s/g, '')
 
@@ -167,6 +173,9 @@ export function run(message: Message, args: string[], client: Client): void {
     return
   }
 
+  // initialise game
+  const MAX_ROUNDS = 6
+  let round = 1
   const solution = solutions[randomNumber(solutions.length)]
   const guesses: Guess[] = []
   const keyboard = qwerty.reduce<Keyboard>(
@@ -175,7 +184,6 @@ export function run(message: Message, args: string[], client: Client): void {
   )
 
   const collector = message.channel.createMessageCollector(collectorFilter)
-  let round = 1
 
   store.startGame(guildId, GameType.WORDLE)
 
@@ -187,6 +195,8 @@ export function run(message: Message, args: string[], client: Client): void {
 
   collector.on('collect', (m) => {
     const content = m.content.toLowerCase().replace(/\s/g, '')
+
+    // end game if user sends %stop / %end
     if (['%stop', '%end'].includes(content)) {
       collector.stop('CANCEL')
       return
@@ -194,9 +204,9 @@ export function run(message: Message, args: string[], client: Client): void {
 
     const guess = content.slice(1)
 
+    // ignore duplicate guesses
+    // (tmp: not using onError due to collector.on handling thrown errors)
     if (guesses.some((g) => g.word === guess)) {
-      // (tmp: not using onError due to collector.on handling thrown errors)
-      // already guessed
       send(message, {
         title: 'Error:',
         description: `"${guess.toUpperCase()}" has already been guessed.`,
@@ -206,11 +216,12 @@ export function run(message: Message, args: string[], client: Client): void {
       return
     }
 
+    // ignore invalid guesses (added to explain 5 character guess limitation)
+    // (tmp: not using onError due to collector.on handling thrown errors)
     if (
       (!solutions.includes(guess) && !validGuesses.includes(guess)) ||
       guess.length !== 5
     ) {
-      // (tmp: not using onError due to collector.on handling thrown errors)
       // not valid word
       send(message, {
         title: 'Error:',
@@ -239,7 +250,7 @@ export function run(message: Message, args: string[], client: Client): void {
 
     round++
 
-    if (round > 10) {
+    if (round > MAX_ROUNDS) {
       collector.stop('LOSE')
       store.endGame(guildId)
     }
