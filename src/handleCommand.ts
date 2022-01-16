@@ -1,5 +1,4 @@
 import { Client, Message, NewsChannel, TextChannel } from 'discord.js'
-import { Obj } from 'tsu'
 
 function log({
   command,
@@ -22,7 +21,7 @@ function log({
 }
 
 export function handleCommand(client: Client, message: Message): void {
-  const [commandName, ...args] = message.content.slice(1).split(' ') // args: string[]
+  const [commandName, ...args] = message.content.slice(1).split(' ')
   const command = client.commands.get(commandName)
 
   // exit if command doesn't exist, or is invoked in DMs

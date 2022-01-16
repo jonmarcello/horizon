@@ -5,12 +5,12 @@ import { send } from '../utils'
 export function run(message: Message, args: string[], client: Client): void {
   const commands = client.commands
 
-  // send embed containing all commands, descriptions, and aliases, removing subsequent fields if their descriptions are the same
   message.channel.send(message, {
     embed: {
       title: 'Commands:',
       fields: commands
         .filter(
+          // prevent aliases from being displayed as their own commands
           (command, commandName) => !command.opts.aliases?.includes(commandName)
         )
         .map((command, commandName) => {

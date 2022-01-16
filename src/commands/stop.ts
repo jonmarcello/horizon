@@ -10,10 +10,10 @@ export function run(message: Message, args: string[], client: Client): void {
     throw new Error('There are no games currently being played.')
   }
 
-  const author = message.author.username
+  const user = message.author.username
 
   send(message, {
-    description: `**${author}** has ended a game early. Boo them!`
+    description: `**${user}** has ended a game early. Boo them!`
   })
 
   store.endGame(guildId)

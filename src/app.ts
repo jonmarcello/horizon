@@ -12,6 +12,7 @@ async function init() {
   const client = new Discord.Client()
   client.commands = new Collection()
 
+  // file-based command registration
   const commandFiles = readdirSync('./src/commands')
 
   commandFiles.forEach(async (file) => {
@@ -34,9 +35,10 @@ async function init() {
   })
 
   client.on('message', (message) => {
+    // ignore messages from bots
     if (message.author.bot) return
 
-    if (message.content.startsWith(process.env.COMMAND_PREFIX as string)) {
+    if (message.content.startsWith(<string>process.env.COMMAND_PREFIX)) {
       handleCommand(client, message)
     } else {
       handleMessage(client, message)

@@ -16,7 +16,6 @@ export function handleMessage(client: Client, message: Message): void {
 
     message.react(emoji)
 
-    // Horizon Bound specific handlers
     if (message.guild?.id === process.env.SERVER_HB) {
       const author = message.author.username
       const horizonLikesChannel = <TextChannel>(
