@@ -48,11 +48,12 @@ function printGuesses(
   message: Message,
   {
     round,
+    maxRounds,
     guesses,
     keyboard
-  }: { round: number; guesses: Guess[]; keyboard: Keyboard }
+  }: { round: number; maxRounds: number; guesses: Guess[]; keyboard: Keyboard }
 ): void {
-  const roundStr = `Round: ${round} / 10`
+  const roundStr = `Round: ${round} / ${maxRounds}`
 
   const emojisStr = guesses.reduce((acc, guess) => {
     const wordEmojis = chars(guess.word).map(toLetterEmoji).join(' ')
@@ -245,7 +246,7 @@ export function run(message: Message, args: string[], client: Client): void {
 
       updateKeyboard(keyboard, keyStates)
       guesses.push({ word: guess, infoEmojis: emojis })
-      printGuesses(message, { guesses, keyboard, round })
+      printGuesses(message, { guesses, keyboard, round, maxRounds: MAX_ROUNDS })
     }
 
     round++
