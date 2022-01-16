@@ -152,6 +152,7 @@ export function run(message: Message, args: string[], client: Client): void {
   const guildId = message.guild!.id
   const timeStarted = Date.now()
 
+  // prevent command from running in non-permitted Horizon Bound channels
   if (guildId === process.env.SERVER_HB) {
     const channelId = Number(message.channel.id)
 
@@ -160,14 +161,13 @@ export function run(message: Message, args: string[], client: Client): void {
     }
   }
 
+  // prevent command from running if there's already an active game
   if (store.isGameInProgress(guildId)) {
     sendActiveGameError(message)
     return
   }
 
   const solution = solutions[randomNumber(solutions.length)]
-  console.log(`WORDLE SOLUTION: ${solution}`)
-
   const guesses: Guess[] = []
   const keyboard = qwerty.reduce<Keyboard>(
     (acc, letter) => ({ ...acc, [letter]: KeyState.CLEAN }),
@@ -194,13 +194,26 @@ export function run(message: Message, args: string[], client: Client): void {
 
     const guess = content.slice(1)
 
+    if (guesses.some((g) => g.word === guess)) {
+      // (tmp: not using onError due to collector.on handling thrown errors)
+      // already guessed
+      send(message, {
+        title: 'Error:',
+        description: `"${guess.toUpperCase()}" has already been guessed.`,
+        color: Color.ERROR
+      })
+
+      return
+    }
+
     if (
       (!solutions.includes(guess) && !validGuesses.includes(guess)) ||
       guess.length !== 5
     ) {
+      // (tmp: not using onError due to collector.on handling thrown errors)
       // not valid word
       send(message, {
-        title: 'Invalid Word',
+        title: 'Error:',
         description: `"${guess.toUpperCase()}" is not a valid word.`,
         color: Color.ERROR
       })
@@ -232,7 +245,7 @@ export function run(message: Message, args: string[], client: Client): void {
     }
   })
 
-  collector.on('end', (_, reason) => {
+  collector.once('end', (_, reason) => {
     const timeEnded = Date.now()
     const timeDiff = Math.floor((timeEnded - timeStarted) / 1000)
     const minutes = Math.floor(timeDiff / 60)
