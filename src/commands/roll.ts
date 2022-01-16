@@ -44,7 +44,7 @@ export function onError(message: Message, args: string, error: Error): void {
 }
 
 export const opts = {
-  name: 'roll',
-  description: 'Rolls dice.',
-  aliases: ['r']
+  description: 'Rolls a number of dice.',
+  usage: '%roll <number of dice>d<number of sides>',
+  aliases: ['dice']
 }

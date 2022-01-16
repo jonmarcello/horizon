@@ -29,7 +29,7 @@ export function onError(message: Message, args: string, error: Error): void {
 }
 
 export const opts = {
-  name: 'stop',
-  description: 'Stops the current game early.',
+  description: 'Ends the current game early.',
+  usage: '%stop',
   aliases: ['end']
 }

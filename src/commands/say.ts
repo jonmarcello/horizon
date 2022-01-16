@@ -9,7 +9,7 @@ export function run(message: Message, args: string[], client: Client): void {
 }
 
 export const opts = {
-  name: 'say',
-  description: 'Sends a message as the bot.',
+  description: 'Repeats what you say.',
+  usage: '%say <message>',
   aliases: ['repeat']
 }

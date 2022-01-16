@@ -3,7 +3,30 @@ import { Color } from '../types'
 import { send } from '../utils'
 
 export function run(message: Message, args: string[], client: Client): void {
-  //
+  const commands = client.commands
+
+  // send embed containing all commands, descriptions, and aliases, removing subsequent fields if their descriptions are the same
+  message.channel.send(message, {
+    embed: {
+      title: 'Commands:',
+      fields: commands
+        .filter(
+          (command, commandName) => !command.opts.aliases?.includes(commandName)
+        )
+        .map((command, commandName) => {
+          const aliases = command.opts.aliases?.join(', ') ?? ''
+          const description = `${command.opts.description}\nUsage: \`${command.opts.usage}\``
+
+          return {
+            name: `${process.env.COMMAND_PREFIX}${commandName}${
+              aliases ? ` (${aliases})` : ''
+            }`,
+            value: description
+          }
+        }),
+      color: Color.DEFAULT
+    }
+  })
 }
 
 export function onError(message: Message, args: string, error: Error): void {
@@ -17,7 +40,7 @@ export function onError(message: Message, args: string, error: Error): void {
 }
 
 export const opts = {
-  name: 'help',
-  description: 'Shows this message.',
-  aliases: ['h']
+  description: 'Displays this message.',
+  usage: '%help <command>',
+  aliases: ['commands', 'cmds']
 }

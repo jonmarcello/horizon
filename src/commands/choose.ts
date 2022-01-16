@@ -38,7 +38,7 @@ export function onError(message: Message, args: string, error: Error): void {
 }
 
 export const opts = {
-  name: 'choose',
   description: 'Randomly selects an item from a list of choices.',
+  usage: '%choose <option1>/<option2>/<option3>/...',
   aliases: ['pick', 'select']
 }

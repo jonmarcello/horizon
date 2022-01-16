@@ -175,8 +175,9 @@ export function run(message: Message, args: string[], client: Client): void {
   )
 
   const collector = message.channel.createMessageCollector(collectorFilter)
-
   let round = 1
+
+  store.startGame(guildId, GameType.WORDLE)
 
   send(message, {
     title: 'Wordle',
@@ -218,16 +219,9 @@ export function run(message: Message, args: string[], client: Client): void {
     } else {
       const { emojis, keyStates } = evaluateGuess(guess, solution)
 
-      // YUCKY MUTABLE EW
       updateKeyboard(keyboard, keyStates)
-
       guesses.push({ word: guess, infoEmojis: emojis })
-
-      printGuesses(message, {
-        guesses,
-        keyboard,
-        round
-      })
+      printGuesses(message, { guesses, keyboard, round })
     }
 
     round++
@@ -272,8 +266,6 @@ export function run(message: Message, args: string[], client: Client): void {
         break
     }
   })
-
-  store.startGame(guildId, GameType.WORDLE)
 }
 
 export function onError(message: Message, args: string, error: Error): void {
@@ -285,7 +277,7 @@ export function onError(message: Message, args: string, error: Error): void {
 }
 
 export const opts = {
-  name: 'wordle',
   description: 'Play a game of wordle!',
+  usage: '%wordle',
   aliases: ['w']
 }

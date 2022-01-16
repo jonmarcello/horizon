@@ -1,16 +1,5 @@
 import { Client, Message } from 'discord.js'
 
-export type Command = {
-  run: (m: Message, as: string[], c: Client) => void
-  opts: {
-    name: string
-    usage: string
-    aliases?: string[]
-    game?: boolean
-  }
-  onError?: (m: Message, as: string[], e: Error) => void
-}
-
 export enum GameType {
   NONE = 'none',
   ACDRAW = 'acdraw',
@@ -21,6 +10,18 @@ export enum Color {
   DEFAULT = '#6366f1',
   SUCCESS = '#33b136',
   ERROR = '#b91c1c'
+}
+
+export interface CommandOpts {
+  description: string
+  usage: string
+  aliases?: string[]
+}
+
+export interface Command {
+  run: (m: Message, as: string[], c: Client) => void
+  onError?: (m: Message, as: string[], e: Error) => void
+  opts: CommandOpts
 }
 
 // import { Fn } from 'tsu'

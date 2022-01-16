@@ -1,6 +1,5 @@
-import Discord from 'discord.js'
+import Discord, { Collection } from 'discord.js'
 import { readdirSync } from 'fs'
-import { Obj } from 'tsu'
 import dotenv from 'dotenv'
 import { Command } from './types'
 import { handleCommand } from './handleCommand'
@@ -10,36 +9,28 @@ import { handleMessage } from './handleMessage'
 dotenv.config()
 
 async function init() {
+  const client = new Discord.Client()
+  client.commands = new Collection()
+
   const commandFiles = readdirSync('./src/commands')
 
-  const commands = await commandFiles.reduce(async (acc, file) => {
-    let path
-
-    if (process.env.NODE_ENV === 'production') {
-      path = `./commands/${file.replace('.ts', '.js')}`
-    } else {
-      path = `./commands/${file}`
-    }
-
+  commandFiles.forEach(async (file) => {
+    const path = `./commands/${file}`
     const command: Command = await import(path)
-    const commandName = file.split('.ts')[0]
+    const commandName = file.split('.')[0]
 
-    const next = { ...(await acc), [commandName]: command }
+    client.commands.set(commandName, command)
 
-    command.opts?.aliases?.forEach((alias) => {
-      next[alias] = command
+    command.opts.aliases?.forEach((alias) => {
+      client.commands.set(alias, command)
     })
-
-    return next
-  }, Promise.resolve({} as Obj<Command>))
-
-  const client = new Discord.Client()
+  })
 
   client.on('message', (message) => {
     if (message.author.bot) return
 
     if (message.content.startsWith(process.env.COMMAND_PREFIX as string)) {
-      handleCommand(client, commands, message)
+      handleCommand(client, message)
     } else {
       handleMessage(client, message)
     }

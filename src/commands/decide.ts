@@ -14,7 +14,7 @@ export function run(message: Message, args: string[], client: Client): void {
 }
 
 export const opts = {
-  name: 'decide',
-  description: 'Makes a coin flip decision.',
+  description: 'Randomly decides whether to answer yes or no.',
+  usage: '%decide <question>',
   aliases: ['yn']
 }
