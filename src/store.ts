@@ -1,12 +1,8 @@
+import { Obj } from 'tsu'
 import { GameType } from './types'
 
 const state = {
-  currentGame: GameType.NONE,
-  serverGames: {
-    [process.env.SERVER_HB!]: GameType.NONE,
-    [process.env.SERVER_MR!]: GameType.NONE,
-    [process.env.SERVER_OS!]: GameType.NONE
-  }
+  serverGames: <Obj>{}
 }
 
 const actions = {
@@ -21,8 +17,8 @@ const actions = {
 
 const getters = {
   isGameInProgress: (serverId: string) =>
-    state.serverGames[serverId] !== GameType.NONE,
-  currentGame: () => state.currentGame
+    Object.keys(state.serverGames).includes(serverId) &&
+    state.serverGames[serverId] !== GameType.NONE
 }
 
 export const store = {
