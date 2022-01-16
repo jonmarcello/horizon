@@ -271,7 +271,7 @@ export function run(message: Message, args: string[], client: Client): void {
       case 'WIN':
         send(message, {
           title: 'Congration, you done it!',
-          description: `Word: **${solution.toUpperCase()}**\nRounds: ${round} / 10\nTime: ${timeStr}\n${guesses.reduce(
+          description: `Word: **${solution.toUpperCase()}**\nRounds: ${round} / ${MAX_ROUNDS}\nTime: ${timeStr}\n${guesses.reduce(
             (acc, guess) => `${acc}\n${guess.infoEmojis.join('')}`,
             ''
           )}`,
