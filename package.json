@@ -1,12 +1,11 @@
 {
   "name": "horizon",
-  "version": "0.0.0",
   "description": "Discord bot for New Horizons server",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc",
-    "dev": "NODE_ENV=development nodemon src/app.ts",
-    "serve": "NODE_ENV=development nodemon src/app.ts ",
+    "dev": "NODE_ENV=development nodemon -e ts -w ./src -x ts-node src/app.ts",
+    "serve": "yarn dev",
     "start": "NODE_ENV=production node dist/app.js"
   },
   "main": "app.js",
@@ -25,7 +24,7 @@
     "nodemon": "^2.0.8",
     "prettier": "^2.5.1",
     "rimraf": "^3.0.2",
-    "ts-node": "^10.0.0",
+    "ts-node": "^10.4.0",
     "typescript": "^4.3.4"
   },
   "dependencies": {
