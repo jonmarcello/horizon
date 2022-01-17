@@ -5,6 +5,16 @@ import { send } from '../utils'
 export function run(message: Message, args: string[], client: Client): void {
   const commands = client.commands
 
+  if (message.author.id === process.env.LYDIA_ID) {
+    send(message, {
+      title: 'Error:',
+      description: 'Lydia detected.\ntl;dr: type stuff and press enter',
+      color: Color.ERROR
+    })
+
+    return
+  }
+
   message.channel.send(message, {
     embed: {
       title: 'Commands:',
