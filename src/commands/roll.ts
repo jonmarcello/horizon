@@ -24,13 +24,21 @@ export function run(message: Message, args: string[], client: Client): void {
     throw new Error('The number of dice must be a number between [2-100].')
   }
 
-  const rolls = [...new Array(Number(nDice) || 1)].map(
-    () => randomNumber(Number(nSides)) + 1
+  const [rolls, total] = [...new Array(Number(nDice) || 1)].reduce(
+    ([currentRolls, currentTotal]) => {
+      const roll = randomNumber(Number(nSides)) + 1
+      const total = currentTotal + roll
+      return [
+        [...currentRolls, roll === 1 || roll === nSides ? `**${roll}**` : roll],
+        total
+      ]
+    },
+    [[], 0]
   )
 
   send(message, {
     title: 'Rolls:',
-    description: `[${rolls.join(', ')}]`
+    description: `[${rolls.join(', ')}]\n\nTotal: **${total}**`
   })
 }
 
