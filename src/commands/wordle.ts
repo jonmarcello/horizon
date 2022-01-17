@@ -264,7 +264,7 @@ export function run(message: Message, args: string[], client: Client): void {
     const seconds = timeDiff % 60
 
     const timeStr = minutes
-      ? `${minutes}:${seconds}`
+      ? `${minutes}:${String(seconds).padStart(2, '0')}`
       : `0:${String(seconds).padStart(2, '0')}`
 
     switch (reason) {
