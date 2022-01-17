@@ -15,7 +15,7 @@ export function run(message: Message, args: string[], client: Client): void {
     return
   }
 
-  message.channel.send(message, {
+  message.channel.send({
     embed: {
       title: 'Commands:',
       fields: commands
@@ -51,6 +51,6 @@ export function onError(message: Message, args: string, error: Error): void {
 
 export const opts = {
   description: 'Displays this message.',
-  usage: '%help <command>',
+  usage: '%help',
   aliases: ['commands', 'cmds']
 }
