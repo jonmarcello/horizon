@@ -1,10 +1,11 @@
 import { Client, Message, TextChannel } from 'discord.js'
 import { randomChance, randomNumber } from 'tsu'
+import { isHorizonBotOrAdminChannel } from './utils'
 
 export function handleMessage(client: Client, message: Message): void {
   const shouldReact = randomChance(500)
 
-  if (shouldReact) {
+  if (shouldReact && !isHorizonBotOrAdminChannel(message.channel.id)) {
     const emojiRoll = randomNumber(100)
     let emoji
 

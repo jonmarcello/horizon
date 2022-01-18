@@ -42,10 +42,11 @@ export function sendActiveGameError(message: Message): void {
   })
 }
 
-export function isPermittedHorizonChannel(channelId: number): boolean {
+export function isHorizonBotOrAdminChannel(channelId: string): boolean {
   return [
-    Number(process.env?.CHANNEL_HB_DISCORDGAMES),
-    Number(process.env?.CHANNEL_HB_TESTING),
-    Number(process.env?.CHANNEL_HB_HORIZONLIKES)
+    process.env?.CHANNEL_HB_DISCORDGAMES,
+    process.env?.CHANNEL_HB_HORIZONLIKES,
+    process.env?.CHANNEL_HB_TESTING,
+    process.env?.CHANNEL_HB_ADMIN
   ].includes(channelId)
 }

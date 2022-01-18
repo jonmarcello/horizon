@@ -2,7 +2,7 @@ import { Client, Message } from 'discord.js'
 import { chars, randomNumber } from 'tsu'
 import { Color, GameType } from '../types'
 import {
-  isPermittedHorizonChannel,
+  isHorizonBotOrAdminChannel,
   removeItemFromArray,
   send,
   sendActiveGameError
@@ -161,9 +161,9 @@ export function run(message: Message, args: string[], client: Client): void {
 
   // prevent command from running in non-permitted Horizon Bound channels
   if (guildId === process.env.SERVER_HB) {
-    const channelId = Number(message.channel.id)
+    const channelId = message.channel.id
 
-    if (!isPermittedHorizonChannel(channelId)) {
+    if (!isHorizonBotOrAdminChannel(channelId)) {
       throw new Error("This command isn't allowed in this channel.")
     }
   }
