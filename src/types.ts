@@ -1,8 +1,10 @@
-import { Client, Message } from 'discord.js'
+import { Client, Message, MessageAttachment } from 'discord.js'
+
+/* enums */
 
 export enum GameType {
   NONE = 'none',
-  ACDRAW = 'acdraw',
+  PIXELMON = 'pixelmon',
   WORDLE = 'wordle'
 }
 
@@ -11,6 +13,20 @@ export enum Color {
   SUCCESS = '#33b136',
   ERROR = '#b91c1c'
 }
+
+export enum PokemonGen {
+  GEN_I = 'gen1',
+  GEN_II = 'gen2',
+  GEN_III = 'gen3',
+  GEN_IV = 'gen4',
+  GEN_V = 'gen5',
+  GEN_VI = 'gen6',
+  GEN_VII = 'gen7',
+  GEN_VIII = 'gen8',
+  GEN_ALL = 'all'
+}
+
+/* interfaces */
 
 export interface CommandOpts {
   description: string
@@ -24,46 +40,20 @@ export interface Command {
   opts: CommandOpts
 }
 
-// import { Fn } from 'tsu'
+export interface MessageContents {
+  title?: string
+  description?: string
+  fields?: { name: string; value: string; inline?: boolean }[]
+  image?: { url?: string }
+  footer?: string
+  color?: Color
+  files?: MessageAttachment[]
+}
 
-// export type Gen =
-//   | 'gen1'
-//   | 'gen2'
-//   | 'gen3'
-//   | 'gen4'
-//   | 'gen5'
-//   | 'gen6'
-//   | 'gen7'
-//   | 'gen8'
-//   | 'all'
-
-// export enum GameType {
-//   NONE,
-//   POKEDRAW,
-//   POKEGUESS,
-//   ACDRAW
-// }
-
-// export type HorizonState = {
-//   gameType: GameType
-//   timeout: NodeJS.Timeout | null
-// }
-
-// export type HorizonActions = {
-//   startGame: (type: GameType) => void
-//   endGame: () => void
-//   setTimeout: (fn: Fn, time: number) => void
-//   clearTimeout: () => void
-// }
-
-// export type HorizonGetters = {
-//   getIsGameActive: () => boolean
-//   getGameType: () => GameType
-// }
-
-// export type HorizonStore = HorizonActions & HorizonGetters
-
-// export type Pokemon = {
-//   name: string
-//   number: string
-// }
+export interface Pokemon {
+  name: string
+  number: string
+  type: string
+  generation: number
+  pixels: string[]
+}

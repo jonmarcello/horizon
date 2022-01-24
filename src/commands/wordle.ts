@@ -66,9 +66,9 @@ function printGuesses(
     let formattedKeyStr = ''
 
     if (key === 'a') {
-      formattedKeyStr += '\n     '
+      formattedKeyStr += '\n  '
     } else if (key === 'z') {
-      formattedKeyStr += '\n        '
+      formattedKeyStr += '\n    '
     }
 
     if (state === KeyState.IN_WORD) {
@@ -148,7 +148,7 @@ function updateKeyboard(
   })
 }
 
-// filter valid guesses (= followed by 5 characters)
+// filter valid guesses (= followed by a-z characters)
 function collectorFilter(message: Message): boolean {
   const content = message.content.toLowerCase().replace(/\s/g, '')
 
@@ -158,6 +158,10 @@ function collectorFilter(message: Message): boolean {
 export function run(message: Message, args: string[], client: Client): void {
   const guildId = message.guild!.id
   const timeStarted = Date.now()
+
+  if (process.env.NODE_ENV === 'development') {
+    return
+  }
 
   // prevent command from running in non-permitted Horizon Bound channels
   if (guildId === process.env.SERVER_HB) {

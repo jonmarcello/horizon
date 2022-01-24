@@ -34,14 +34,14 @@ async function init() {
     })
   })
 
-  client.on('message', (message) => {
+  client.on('message', async (message) => {
     // ignore messages from bots
     if (message.author.bot) return
 
     if (message.content.startsWith(<string>process.env.COMMAND_PREFIX)) {
-      handleCommand(client, message)
+      await handleCommand(client, message)
     } else {
-      handleMessage(client, message)
+      await handleMessage(client, message)
     }
   })
 

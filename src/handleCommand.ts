@@ -20,7 +20,10 @@ function log({
   console.log(`${commandStr}${argsStr}`)
 }
 
-export function handleCommand(client: Client, message: Message): void {
+export async function handleCommand(
+  client: Client,
+  message: Message
+): Promise<void> {
   const [commandName, ...args] = message.content.slice(1).split(' ')
   const command = client.commands.get(commandName)
 
@@ -36,7 +39,7 @@ export function handleCommand(client: Client, message: Message): void {
   })
 
   try {
-    command.run(message, args, client)
+    await command.run(message, args, client)
   } catch (err) {
     if (command.onError) {
       command.onError(message, args, <Error>err)

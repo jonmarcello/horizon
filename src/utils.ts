@@ -1,5 +1,6 @@
-import { Message } from 'discord.js'
-import { Color } from './types'
+import { Message, MessageAttachment } from 'discord.js'
+import { Obj } from 'tsu'
+import { Color, MessageContents } from './types'
 
 /* general */
 
@@ -12,6 +13,10 @@ export function removeItemFromArray<T>(item: T, array: T[]): T[] {
   return [...array.slice(0, idx), ...array.slice(idx + 1)]
 }
 
+export function sortObjectEntries(obj: Obj<number>): Obj<number> {
+  return Object.fromEntries(Object.entries(obj).sort((a, b) => b[1] - a[1]))
+}
+
 /*  discord */
 
 export function send(
@@ -19,17 +24,23 @@ export function send(
   {
     title,
     description,
+    fields = [],
+    image = {},
     footer,
-    color = Color.DEFAULT
-  }: {
-    title?: string
-    description?: string
-    footer?: string
-    color?: Color
-  } = {}
+    color = Color.DEFAULT,
+    files = []
+  }: MessageContents = {}
 ): void {
   message.channel.send({
-    embed: { title, description, color, footer: { text: footer } }
+    embed: {
+      title,
+      description,
+      fields,
+      image,
+      color,
+      footer: { text: footer }
+    },
+    files
   })
 }
 
