@@ -97,7 +97,7 @@ function getTimeoutEmbed(solution: Pokemon, hasNextRound: boolean) {
     )}**.`,
     footer: hasNextRound
       ? 'The next round will begin in 15 seconds...'
-      : undefined,
+      : 'The game will end in 10 seconds...',
     color: Color.ERROR
   }
 }
@@ -115,7 +115,7 @@ function getSuccessEmbed(
     )}**.`,
     footer: hasNextRound
       ? 'The next round will begin in 15 seconds...'
-      : undefined,
+      : 'The game will end in 10 seconds...',
     color: Color.SUCCESS
   }
 }
@@ -256,13 +256,14 @@ export async function run(
 
   send(message, {
     title: 'Pixelmon',
-    description: 'Game started! Make your guesses with `=NAME`!',
+    description:
+      'Can you guess the Pokémon from the 3x3 pixel art?\nMake your guesses with `=NAME`!',
     footer: 'The game will begin in 5 seconds...'
   })
 
-  await sleep(5000)
-
   while (round <= MAX_ROUNDS && store.isGameInProgress(guildId)) {
+    await sleep(5000)
+
     const winner = await playRound(message, round, MAX_ROUNDS, gen)
 
     if (winner) {
@@ -270,7 +271,7 @@ export async function run(
     }
 
     round++
-    await sleep(15000)
+    await sleep(10000)
   }
 
   if (store.isGameInProgress(guildId)) {
