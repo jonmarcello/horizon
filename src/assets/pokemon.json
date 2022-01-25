@@ -15135,14 +15135,33 @@
       "number": "891",
       "type": "Fighting",
       "generation": 8,
-      "pixels": []
+      "pixels": [
+        "transparent",
+        "rgb(190,183,175)",
+        "transparent",
+        "transparent",
+        "rgb(237,232,175)",
+        "transparent",
+        "transparent",
+        "transparent",
+        "transparent"
+      ]
     },
     {
       "name": "urshifu",
       "number": "892",
       "type": "Fighting / Dark",
       "generation": 8,
-      "pixels": []
+      "pixels": [
+        "transparent",
+        "rgb(108,109,114)",
+        "rgb(246,244,243)",
+        "rgb(234,206,73)",
+        "rgb(26,30,36)",
+        "transparent",
+        "rgb(32,36,51)",
+        "rgb(66,71,86)"
+      ]
     },
     {
       "name": "zarude",
@@ -15166,35 +15185,85 @@
       "number": "894",
       "type": "Electric",
       "generation": 8,
-      "pixels": []
+      "pixels": [
+        "transparent",
+        "transparent",
+        "transparent",
+        "rgb(216,224,67)",
+        "rgb(67,91,188)",
+        "rgb(216,224,67)",
+        "transparent",
+        "transparent",
+        "transparent"
+      ]
     },
     {
       "name": "regidrago",
       "number": "895",
       "type": "Dragon",
       "generation": 8,
-      "pixels": []
+      "pixels": [
+        "rgb(61,91,91)",
+        "transparent",
+        "transparent",
+        "rgb(39,56,56)",
+        "rgb(208,29,87)",
+        "rgb(61,91,91)",
+        "rgb(39,64,64)",
+        "rgb(102,19,43)",
+        "transparent"
+      ]
     },
     {
       "name": "glastrier",
       "number": "896",
       "type": "Ice",
       "generation": 8,
-      "pixels": []
+      "pixels": [
+        "rgb(212,203,233)",
+        "rgb(232,235,251)",
+        "transparent",
+        "rgb(216,215,225)",
+        "rgb(237,237,240)",
+        "rgb(162,172,222)",
+        "rgb(126,133,177)",
+        "rgb(196,205,229)",
+        "rgb(238,240,243)"
+      ]
     },
     {
       "name": "spectrier",
       "number": "897",
       "type": "Ghost",
       "generation": 8,
-      "pixels": []
+      "pixels": [
+        "rgb(81,71,143)",
+        "rgb(180,174,203)",
+        "transparent",
+        "rgb(52,59,55)",
+        "rgb(75,65,131)",
+        "rgb(52,59,55)",
+        "rgb(75,65,131)",
+        "rgb(61,46,89)",
+        "rgb(107,95,186)"
+      ]
     },
     {
       "name": "calyrex",
       "number": "898",
       "type": "Psychic / Grass",
       "generation": 8,
-      "pixels": []
+      "pixels": [
+        "rgb(214,211,202)",
+        "rgb(1,85,72)",
+        "rgb(67,114,105)",
+        "transparent",
+        "rgb(193,185,186)",
+        "rgb(0,57,110)",
+        "transparent",
+        "rgb(239,239,239)",
+        "transparent"
+      ]
     }
   ],
   "fakemon": [
