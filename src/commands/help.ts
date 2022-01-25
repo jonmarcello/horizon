@@ -23,6 +23,7 @@ export function run(message: Message, args: string[], client: Client): void {
           // prevent aliases from being displayed as their own commands
           (command, commandName) => !command.opts.aliases?.includes(commandName)
         )
+        .filter((command, commandName) => !commandName.includes(':'))
         .map((command, commandName) => {
           const aliases = command.opts.aliases?.join(', ') ?? ''
           const description = `${command.opts.description}\nUsage: \`${command.opts.usage}\``
