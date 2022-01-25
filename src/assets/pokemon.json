@@ -15137,13 +15137,13 @@
       "generation": 8,
       "pixels": [
         "transparent",
-        "rgb(190,183,175)",
+        "rgb(253,251,247)",
         "transparent",
+        "rgb(24,24,31)",
+        "rgb(198,190,178)",
+        "rgb(24,24,31)",
         "transparent",
-        "rgb(237,232,175)",
-        "transparent",
-        "transparent",
-        "transparent",
+        "rgb(198,190,178)",
         "transparent"
       ]
     },
