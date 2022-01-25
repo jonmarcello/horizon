@@ -290,7 +290,7 @@ export function onError(message: Message, args: string, error: Error): void {
 }
 
 export const opts = {
-  description: 'Play a game of Pixelmon!',
+  description: 'Guess a Pokémon from its 3x3 representation!',
   usage: '%pixelmon <rounds> <gen/all>',
   aliases: ['pm']
 }
