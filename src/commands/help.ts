@@ -32,7 +32,8 @@ export function run(message: Message, args: string[], client: Client): void {
             name: `${process.env.COMMAND_PREFIX}${commandName}${
               aliases ? ` (${aliases})` : ''
             }`,
-            value: description
+            value: description,
+            inline: true
           }
         }),
       color: Color.DEFAULT

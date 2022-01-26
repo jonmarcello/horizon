@@ -5,7 +5,8 @@ import { Client, Message, MessageAttachment } from 'discord.js'
 export enum GameType {
   NONE = 'none',
   PIXELMON = 'pixelmon',
-  WORDLE = 'wordle'
+  WORDLE = 'wordle',
+  NUMBLE = 'numble'
 }
 
 export enum Color {

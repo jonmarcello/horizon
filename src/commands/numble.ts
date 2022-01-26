@@ -8,7 +8,6 @@ import {
   sendActiveGameError
 } from '../utils'
 import { store } from '../store'
-import { qwerty, solutions, validGuesses } from '../assets/wordle.json'
 
 enum Emoji {
   GREEN = ':green_square:',
@@ -23,7 +22,7 @@ enum KeyState {
 }
 
 interface Guess {
-  word: string
+  number: string
   infoEmojis: Emoji[]
 }
 
@@ -39,8 +38,23 @@ interface EvaluationResults {
 /* * */
 
 // convert a letter to its respective regional indicator emoji
-function toLetterEmoji(letter: string): string {
-  return `:regional_indicator_${letter.toLowerCase()}:`
+function toNumberEmoji(
+  number: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+): string {
+  const numberEmojis = {
+    '0': ':zero:',
+    '1': ':one:',
+    '2': ':two:',
+    '3': ':three:',
+    '4': ':four:',
+    '5': ':five:',
+    '6': ':six:',
+    '7': ':seven:',
+    '8': ':eight:',
+    '9': ':nine:'
+  }
+
+  return numberEmojis[number]
 }
 
 // display current round, previous guesses (and their results), and the keyboard
@@ -56,7 +70,23 @@ function printGuesses(
   const roundStr = `Round: ${round} / ${maxRounds}`
 
   const emojisStr = guesses.reduce((acc, guess) => {
-    const wordEmojis = chars(guess.word).map(toLetterEmoji).join(' ')
+    // (this is good code)
+    const wordEmojis = (
+      chars(guess.number) as (
+        | '0'
+        | '1'
+        | '2'
+        | '3'
+        | '4'
+        | '5'
+        | '6'
+        | '7'
+        | '8'
+        | '9'
+      )[]
+    )
+      .map(toNumberEmoji)
+      .join(' ')
     const infoEmojis = guess.infoEmojis.join(' ')
 
     return `${acc}\n\n${wordEmojis}\n${infoEmojis}`
@@ -65,16 +95,14 @@ function printGuesses(
   const keyboardStr = Object.entries(keyboard).reduce((acc, [key, state]) => {
     let formattedKeyStr = ''
 
-    if (key === 'a') {
-      formattedKeyStr += '\n  '
-    } else if (key === 'z') {
-      formattedKeyStr += '\n    '
+    if (key === '5') {
+      formattedKeyStr += '\n'
     }
 
     if (state === KeyState.IN_WORD) {
-      formattedKeyStr += `**\`${key.toUpperCase()}\`**`
+      formattedKeyStr += `**\`${key}\`**`
     } else if (state === KeyState.NOT_IN_WORD) {
-      formattedKeyStr += `||\`${key.toUpperCase()}\`||`
+      formattedKeyStr += `||\`${key}\`||`
     } else {
       formattedKeyStr += key
     }
@@ -83,7 +111,7 @@ function printGuesses(
   }, '')
 
   send(message, {
-    title: 'Wordle',
+    title: 'Numble',
     description: `${roundStr}\n${emojisStr}\n\n${keyboardStr}`
   })
 }
@@ -152,16 +180,12 @@ function updateKeyboard(
 function collectorFilter(message: Message): boolean {
   const content = message.content.toLowerCase().replace(/\s/g, '')
 
-  return ['%stop', '%end'].includes(content) || /^=\s*[a-z]+/.test(content)
+  return ['%stop', '%end'].includes(content) || /^=\s*[0-9]+/.test(content)
 }
 
 export function run(message: Message, args: string[], client: Client): void {
   const guildId = message.guild!.id
   const timeStarted = Date.now()
-
-  if (process.env.NODE_ENV === 'development') {
-    return
-  }
 
   // prevent command from running in non-permitted Horizon Bound channels
   if (guildId === process.env.SERVER_HB) {
@@ -181,26 +205,28 @@ export function run(message: Message, args: string[], client: Client): void {
   // initialise game
   const MAX_ROUNDS = 6
   let round = 1
-  const solution = solutions[randomNumber(solutions.length)]
+  const solution = String(randomNumber(10000, 1000))
   const guesses: Guess[] = []
-  const keyboard = qwerty.reduce<Keyboard>(
-    (acc, letter) => ({ ...acc, [letter]: KeyState.CLEAN }),
-    {}
-  )
+  const keyboard = [...new Array(10)]
+    .map((_, i) => String(i))
+    .reduce<Keyboard>(
+      (acc, letter) => ({ ...acc, [letter]: KeyState.CLEAN }),
+      {}
+    )
 
   const collector = message.channel.createMessageCollector(collectorFilter)
 
   store.startGame(guildId, GameType.WORDLE)
 
   send(message, {
-    title: 'Wordle',
+    title: 'Numble',
     description:
-      'Can you guess the secret 5 letter word?\nMake your guesses with `=WORD`!',
-    footer: 'Hint: all solutions are 5 letters long!'
+      'Can you guess the secret 4 digit number?\nMake your guesses with `=NUMBER`!',
+    footer: 'Hint: all solutions are 4 numbers long, and CANNOT start with a 0!'
   })
 
   collector.on('collect', (m) => {
-    const content = m.content.toLowerCase().replace(/\s/g, '')
+    const content = m.content.replace(/\s/g, '')
 
     // end game if user sends %stop / %end
     if (['%stop', '%end'].includes(content)) {
@@ -212,10 +238,10 @@ export function run(message: Message, args: string[], client: Client): void {
 
     // ignore duplicate guesses
     // (tmp: not using onError due to collector.on handling thrown errors)
-    if (guesses.some((g) => g.word === guess)) {
+    if (guesses.some((g) => g.number === guess)) {
       send(message, {
         title: 'Error:',
-        description: `"${guess.toUpperCase()}" has already been guessed.`,
+        description: `"${guess}" has already been guessed.`,
         color: Color.ERROR
       })
 
@@ -224,14 +250,11 @@ export function run(message: Message, args: string[], client: Client): void {
 
     // ignore invalid guesses (added to explain 5 character guess limitation)
     // (tmp: not using onError due to collector.on handling thrown errors)
-    if (
-      (!solutions.includes(guess) && !validGuesses.includes(guess)) ||
-      guess.length !== 5
-    ) {
+    if (guess.length !== 4) {
       // not valid word
       send(message, {
         title: 'Error:',
-        description: `"${guess.toUpperCase()}" is not a valid word.`,
+        description: `"${guess}" is not a valid number.`,
         color: Color.ERROR
       })
 
@@ -240,9 +263,9 @@ export function run(message: Message, args: string[], client: Client): void {
 
     if (guess === solution) {
       guesses.push({
-        word: guess,
+        number: guess,
         // prettier-ignore
-        infoEmojis: [Emoji.GREEN, Emoji.GREEN, Emoji.GREEN, Emoji.GREEN, Emoji.GREEN]
+        infoEmojis: [Emoji.GREEN, Emoji.GREEN, Emoji.GREEN, Emoji.GREEN]
       })
       collector.stop('WIN')
       store.endGame(guildId)
@@ -250,7 +273,7 @@ export function run(message: Message, args: string[], client: Client): void {
       const { emojis, keyStates } = evaluateGuess(guess, solution)
 
       updateKeyboard(keyboard, keyStates)
-      guesses.push({ word: guess, infoEmojis: emojis })
+      guesses.push({ number: guess, infoEmojis: emojis })
       printGuesses(message, { guesses, keyboard, round, maxRounds: MAX_ROUNDS })
     }
 
@@ -276,7 +299,7 @@ export function run(message: Message, args: string[], client: Client): void {
       case 'WIN':
         send(message, {
           title: 'Congration, you done it!',
-          description: `Word: **${solution.toUpperCase()}**\nRounds: ${round} / ${MAX_ROUNDS}\nTime: ${timeStr}\n${guesses.reduce(
+          description: `Number: **${solution}**\nRounds: ${round} / ${MAX_ROUNDS}\nTime: ${timeStr}\n${guesses.reduce(
             (acc, guess) => `${acc}\n${guess.infoEmojis.join('')}`,
             ''
           )}`,
@@ -287,7 +310,7 @@ export function run(message: Message, args: string[], client: Client): void {
       case 'LOSE':
         send(message, {
           title: 'Game over!',
-          description: `Oh no, no one got it!\nThe word was: ||${solution.toUpperCase()}||.`,
+          description: `Oh no, no one got it!\nThe number was: ||${solution.toUpperCase()}||.`,
           color: Color.ERROR
         })
         break
@@ -307,7 +330,7 @@ export function onError(message: Message, args: string, error: Error): void {
 }
 
 export const opts = {
-  description: 'Play a game of wordle!',
-  usage: '%wordle',
-  aliases: ['w']
+  description: 'Play a game of numble!',
+  usage: '%numble',
+  aliases: ['n']
 }
