@@ -157,9 +157,8 @@ async function playRound(
   message: Message,
   round: number,
   maxRounds: number,
-  gen: PokemonGen
+  solution: Pokemon
 ): Promise<string | undefined> {
-  const solution = generatePokemon(gen)
   const roundEmbed = getRoundEmbed(round, maxRounds, solution)
   const guildId = message.guild!.id
 
@@ -250,6 +249,7 @@ export async function run(
 
   const [MAX_ROUNDS, gen] = parseArgsOrThrow(args)
   const scores: Obj<number> = {}
+  const previousSolutions: string[] = []
   let round = 1
 
   store.startGame(guildId, GameType.PIXELMON)
@@ -264,7 +264,15 @@ export async function run(
   while (round <= MAX_ROUNDS && store.isGameInProgress(guildId)) {
     await sleep(5000)
 
-    const winner = await playRound(message, round, MAX_ROUNDS, gen)
+    let solution = generatePokemon(gen)
+
+    while (previousSolutions.includes(solution.name)) {
+      solution = generatePokemon(gen)
+    }
+
+    previousSolutions.push(solution.name)
+
+    const winner = await playRound(message, round, MAX_ROUNDS, solution)
 
     if (winner) {
       scores[winner] = (scores[winner] || 0) + 1
