@@ -5987,7 +5987,7 @@
     {
       "name": "shuppet",
       "number": "353",
-      "type": "",
+      "type": "Ghost",
       "generation": 3,
       "pixels": [
         "transparent",
@@ -6004,7 +6004,7 @@
     {
       "name": "banette",
       "number": "354",
-      "type": "",
+      "type": "Ghost",
       "generation": 3,
       "pixels": [
         "transparent",
@@ -6021,7 +6021,7 @@
     {
       "name": "duskull",
       "number": "355",
-      "type": "",
+      "type": "Ghost",
       "generation": 3,
       "pixels": [
         "transparent",
@@ -14776,7 +14776,7 @@
     {
       "name": "falinks",
       "number": "870",
-      "type": "",
+      "type": "Fighting",
       "generation": 8,
       "pixels": [
         "rgb(226,0,26)",
