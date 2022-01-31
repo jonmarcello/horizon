@@ -16,8 +16,6 @@ export function run(message: Message, args: string[], client: Client): void {
   const nDice = isEmpty(params[0]) ? 1 : parseInt(params[0])
   const nSides = parseInt(params[1])
 
-  console.log(nDice, nSides)
-
   if (isNaN(nDice) || nDice < 1 || nDice > 100) {
     throw new Error('The number of dice must be a number between [1-100].')
   }
