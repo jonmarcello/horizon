@@ -13,15 +13,17 @@ export function run(message: Message, args: string[], client: Client): void {
   }
 
   const params = trimmedArgs[0].toLowerCase().split('d')
-  const nDice = isEmpty(params[0]) ? 1 : Number(params[0])
-  const nSides = Number(params[1])
+  const nDice = isEmpty(params[0]) ? 1 : parseInt(params[0])
+  const nSides = parseInt(params[1])
 
-  if (isNaN(nDice) || nDice > 100) {
+  console.log(nDice, nSides)
+
+  if (isNaN(nDice) || nDice < 1 || nDice > 100) {
     throw new Error('The number of dice must be a number between [1-100].')
   }
 
   if (isNaN(nSides) || nSides < 2 || nSides > 100) {
-    throw new Error('The number of dice must be a number between [2-100].')
+    throw new Error('The number of sides must be a number between [2-100].')
   }
 
   const [rolls, total] = [...new Array(Number(nDice) || 1)].reduce(
