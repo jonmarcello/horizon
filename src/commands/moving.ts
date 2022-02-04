@@ -25,5 +25,5 @@ export function run(message: Message, args: string[]): void {
 export const opts = {
   description: 'How long until Eb moves house?',
   usage: '%moving',
-  alias: ['suffering']
+  aliases: ['suffering']
 }
