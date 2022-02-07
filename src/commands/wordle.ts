@@ -162,6 +162,11 @@ export function run(message: Message, args: string[], client: Client): void {
   if (process.env.NODE_ENV === 'development') {
     return
   }
+  
+  if (message.author.id === process.env.ANT_ID) {
+    message.channel.send('YOU ARE BANNED FROM THE DAYCARE, ANT!')
+    message.channel.send('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjWmtbzwN7EVtaIJzxFl9rSaK5q42qA4DRhw&usqp=CAU')
+  }
 
   // prevent command from running in non-permitted Horizon Bound channels
   if (guildId === process.env.SERVER_HB) {
