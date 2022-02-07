@@ -164,8 +164,10 @@ export function run(message: Message, args: string[], client: Client): void {
   }
   
   if (message.author.id === process.env.ANT_ID) {
-    message.channel.send('YOU ARE BANNED FROM THE DAYCARE, ANT!')
+    message.channel.send('Rule-breaker! Rule-breaker! You are banned from the Daycare.')
     message.channel.send('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjWmtbzwN7EVtaIJzxFl9rSaK5q42qA4DRhw&usqp=CAU')
+    
+    return
   }
 
   // prevent command from running in non-permitted Horizon Bound channels
