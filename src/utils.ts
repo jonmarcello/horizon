@@ -1,10 +1,9 @@
 import { Message, MessageAttachment } from 'discord.js'
 import { Obj } from 'tsu'
 import { Color, MessageContents } from './types'
+import reactions from './assets/reactions.json'
 
 /* general */
-
-const reactions = require('./assets/reactions.json')
 
 export function removeItemFromArray<T>(item: T, array: T[]): T[] {
   if (!array.includes(item) || array.length < 1) {
@@ -73,15 +72,19 @@ export function arrayToSentence(list: Array<string> | undefined): string {
     return list.toString()
   }
 
-  return list.slice(0, list.length - 1).join(', ') + ", and " + list.slice(-1)
+  return list.slice(0, list.length - 1).join(', ') + ', and ' + list.slice(-1)
 }
 
-export function fetchRandomReaction(reactionType: string): string {
+export function fetchRandomReaction(
+  reactionType: keyof typeof reactions
+): string {
   const fetchedReactions = reactions[reactionType]
 
   if (!fetchedReactions) {
     return ''
   }
 
-  return fetchedReactions[Math.floor(Math.random() * fetchedReactions.length)] || ''
+  return (
+    fetchedReactions[Math.floor(Math.random() * fetchedReactions.length)] || ''
+  )
 }
