@@ -6,12 +6,11 @@ export function run(message: Message, args: string[], client: Client): void {
   const allMentions = message.mentions.members?.map(member => {
     return `<@${member.user.id}>`
   })
-
-  const sentenceMentions = arrayToSentence(allMentions);
+  const mentionsAsSentence = arrayToSentence(allMentions);
 
   let description = `<@${message.author.id}> hugged themselves`
   if (allMentions) {
-    description = `<@${message.author.id}> hugged ${sentenceMentions}`
+    description = `<@${message.author.id}> hugged ${mentionsAsSentence}`
   }
 
   const embedMessage = new MessageEmbed()
@@ -23,7 +22,7 @@ export function run(message: Message, args: string[], client: Client): void {
 }
 
 export const opts = {
-  description: 'Does this command really exist?',
+  description: 'Give somebody a nice big hug',
   usage: '%hug',
   aliases: []
 }
