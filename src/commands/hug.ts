@@ -6,11 +6,11 @@ export function run(message: Message, args: string[], client: Client): void {
   const allMentions = message.mentions.members?.map(member => {
     return `<@${member.user.id}>`
   })
-  const mentionsAsSentence = arrayToSentence(allMentions);
+  const mentionsAsSentence = arrayToSentence(allMentions)
 
-  let description = `<@${message.author.id}> hugged themselves`
+  let description = `<@${message.author.id}> hugged themselves!`
   if (allMentions) {
-    description = `<@${message.author.id}> hugged ${mentionsAsSentence}`
+    description = `<@${message.author.id}> hugged ${mentionsAsSentence}!`
   }
 
   const embedMessage = new MessageEmbed()

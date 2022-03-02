@@ -66,21 +66,21 @@ export function isHorizonBotOrAdminChannel(channelId: string): boolean {
 
 export function arrayToSentence(list: Array<string> | undefined): string {
   if (!list) {
-    return '';
+    return ''
   }
 
   if (list.length === 1) {
-    return list.toString();
+    return list.toString()
   }
 
   return list.slice(0, list.length - 1).join(', ') + ", and " + list.slice(-1)
 }
 
 export function fetchRandomReaction(reactionType: string): string {
-  const fetchedReactions = reactions[reactionType];
+  const fetchedReactions = reactions[reactionType]
 
   if (!fetchedReactions) {
-    return '';
+    return ''
   }
 
   return fetchedReactions[Math.floor(Math.random() * fetchedReactions.length)] || ''
