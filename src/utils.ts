@@ -77,5 +77,9 @@ export function arrayToSentence(list: Array<string> | undefined): string {
 }
 
 export function fetchRandomReaction(reactionType: string): string {
+  if (!reactions[reactionType]) {
+    return '';
+  }
+
   return reactions[reactionType][Math.floor(Math.random() * reactions[reactionType].length)] || ''
 }
