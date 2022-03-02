@@ -3,7 +3,7 @@ import { arrayToSentence, fetchRandomReaction } from '../utils'
 
 export function run(message: Message, args: string[], client: Client): void {
   const randomHug = fetchRandomReaction('hugs')
-  const allMentions = message.mentions.members?.map(member => {
+  const allMentions = message.mentions.members?.map((member) => {
     return `<@${member.user.id}>`
   })
   const mentionsAsSentence = arrayToSentence(allMentions)
