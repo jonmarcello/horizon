@@ -1,5 +1,5 @@
-import { Message, MessageAttachment } from 'discord.js'
-import { Obj } from 'tsu'
+import { Message } from 'discord.js'
+import { Obj, randomNumber } from 'tsu'
 import { Color, MessageContents } from './types'
 import reactions from './assets/reactions.json'
 
@@ -16,6 +16,24 @@ export function removeItemFromArray<T>(item: T, array: T[]): T[] {
 
 export function sortObjectEntries(obj: Obj<number>): Obj<number> {
   return Object.fromEntries(Object.entries(obj).sort((a, b) => b[1] - a[1]))
+}
+
+export function arrayToCommaSeparatedSentence(array: string[]): string {
+  if (!array?.length) {
+    return ''
+  }
+
+  if (array.length === 1) {
+    return array[0]
+  }
+
+  return `${array.slice(0, -1).join(', ')}, and ${array.slice(-1)}`
+}
+
+export function getRandomReactionGif(name: keyof typeof reactions): string {
+  const { gifs } = reactions[name]
+
+  return gifs[randomNumber(gifs.length)]
 }
 
 /*  discord */
@@ -61,30 +79,4 @@ export function isHorizonBotOrAdminChannel(channelId: string): boolean {
     process.env?.CHANNEL_HB_TESTING,
     process.env?.CHANNEL_HB_ADMIN
   ].includes(channelId)
-}
-
-export function arrayToSentence(list: Array<string> | undefined): string {
-  if (!list) {
-    return ''
-  }
-
-  if (list.length === 1) {
-    return list.toString()
-  }
-
-  return list.slice(0, list.length - 1).join(', ') + ', and ' + list.slice(-1)
-}
-
-export function fetchRandomReaction(
-  reactionType: keyof typeof reactions
-): string {
-  const fetchedReactions = reactions[reactionType]
-
-  if (!fetchedReactions) {
-    return ''
-  }
-
-  return (
-    fetchedReactions[Math.floor(Math.random() * fetchedReactions.length)] || ''
-  )
 }

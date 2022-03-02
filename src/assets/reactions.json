@@ -1,11 +1,14 @@
 {
-    "hugs": [
-        "https://i.imgur.com/v7zgJoK.gif",
-        "https://i.imgur.com/eE621EW.gif",
-        "https://i.imgur.com/YGjkMs8.gif",
-        "https://i.imgur.com/L6S8vKN.gif",
-        "https://i.imgur.com/COiLHwf.gif",
-        "https://i.imgur.com/Jj8HcUf.gif",
-        "https://i.imgur.com/IcXySNp.gif"
+  "hugs": {
+    "color": "",
+    "gifs": [
+      "https://i.imgur.com/v7zgJoK.gif",
+      "https://i.imgur.com/eE621EW.gif",
+      "https://i.imgur.com/YGjkMs8.gif",
+      "https://i.imgur.com/L6S8vKN.gif",
+      "https://i.imgur.com/COiLHwf.gif",
+      "https://i.imgur.com/Jj8HcUf.gif",
+      "https://i.imgur.com/IcXySNp.gif"
     ]
+  }
 }
