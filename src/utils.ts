@@ -4,6 +4,8 @@ import { Color, MessageContents } from './types'
 
 /* general */
 
+const reactions = require('./assets/reactions.json')
+
 export function removeItemFromArray<T>(item: T, array: T[]): T[] {
   if (!array.includes(item) || array.length < 1) {
     return array
@@ -60,4 +62,26 @@ export function isHorizonBotOrAdminChannel(channelId: string): boolean {
     process.env?.CHANNEL_HB_TESTING,
     process.env?.CHANNEL_HB_ADMIN
   ].includes(channelId)
+}
+
+export function arrayToSentence(list: Array<string> | undefined): string {
+  if (!list) {
+    return ''
+  }
+
+  if (list.length === 1) {
+    return list.toString()
+  }
+
+  return list.slice(0, list.length - 1).join(', ') + ", and " + list.slice(-1)
+}
+
+export function fetchRandomReaction(reactionType: string): string {
+  const fetchedReactions = reactions[reactionType]
+
+  if (!fetchedReactions) {
+    return ''
+  }
+
+  return fetchedReactions[Math.floor(Math.random() * fetchedReactions.length)] || ''
 }
