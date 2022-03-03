@@ -3,10 +3,14 @@ import { getRandomReactionGif, send } from '../utils'
 
 export function run(message: Message, args: string[], client: Client): void {
   const gif = getRandomReactionGif('hugs')
-  const member = args[0];
+  const member = args[0]
 
   send(message, {
-    description: `${member ? `${message.member} hugged ${member}` : `${message.member} got hugged`}`,
+    description: `${
+      member
+        ? `${message.member} hugged ${member}`
+        : `${message.member} got hugged`
+    }`,
     image: { url: gif }
   })
 }
